@@ -1,0 +1,64 @@
+{
+  "name": "qlik-blends",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "author": {
+    "name": "Riley MacDonald"
+  },
+  "keywords": [
+    "qlik",
+    "blendr"
+  ],
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=8"
+  },
+  "main": "dist/qlik-blends.js",
+  "module": "dist/qlik-blends.esm.js",
+  "scripts": {
+    "build": "rollup -c rollup.config.js -w",
+    "lint": "eslint src",
+    "start": "nebula serve --no-build",
+    "sense": "nebula sense --ext src/extDefinition.js",
+    "test:integration": "aw puppet --testExt '*.int.js' --glob 'test/integration/**/*.int.js'"
+  },
+  "devDependencies": {
+    "@after-work.js/aw": "6.0.10",
+    "@babel/cli": "7.4.4",
+    "@babel/plugin-transform-react-jsx": "7.3.0",
+    "@babel/preset-env": "7.4.5",
+    "@babel/preset-react": "7.0.0",
+    "@nebula.js/cli": "1.0.2-alpha.1",
+    "@nebula.js/cli-build": "1.0.2-alpha.1",
+    "@nebula.js/cli-sense": "1.0.2-alpha.1",
+    "@nebula.js/cli-serve": "1.0.2-alpha.1",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "eslint": "5.12.1",
+    "eslint-config-airbnb": "17.1.0",
+    "eslint-plugin-import": "2.15.0",
+    "eslint-plugin-jsx-a11y": "6.2.1",
+    "eslint-plugin-mocha": "5.2.1",
+    "eslint-plugin-react": "7.13.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "rollup": "^2.30.0",
+    "rollup-plugin-babel": "4.3.2",
+    "rollup-plugin-node-resolve": "5.0.0",
+    "rollup-plugin-postcss": "2.0.3",
+    "rollup-plugin-replace": "2.2.0"
+  },
+  "peerDependencies": {
+    "@nebula.js/stardust": "^1.x"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
+    "@material-ui/core": "^5.0.0-alpha.24",
+    "@material-ui/lab": "^5.0.0-alpha.24",
+    "@reduxjs/toolkit": "^1.5.0",
+    "react-redux": "^7.2.2"
+  }
+}

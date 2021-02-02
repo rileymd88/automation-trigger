@@ -1,0 +1,10 @@
+{
+  "name": "qlik-blends",
+  "version": "1.0.0",
+  "description": "",
+  "author": {
+    "name": "Riley MacDonald"
+  },
+  "icon": "extension",
+  "type": "visualization"
+}
