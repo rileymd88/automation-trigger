@@ -7,14 +7,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/core/Autocomplete';
 
-export default function Dropdown({ block }) {
-
+export default function Dropdown({block, blendGlobalTheme, blend}) {
+  console.log(blendGlobalTheme)
   const useStyles = makeStyles((theme) => ({
     dropdown: {
       width: `${block.width}%`,
       marginBottom: 12
     },
   }));
+  console.log(block)
   const classes = useStyles();
   const checked = useSelector(selectAllItems)[block.index];
   const dispatch = useDispatch();
@@ -31,9 +32,11 @@ export default function Dropdown({ block }) {
 
   return (
     <Autocomplete
+      defaultValue={block.defaultValue}
+      variant={blendGlobalTheme.variant}
       options={options.length > 1 ? options: []}
       className={classes.dropdown}
-      renderInput={(params) => <TextField {...params} label={block.label} />}
+      renderInput={(params) => <TextField {...params} variant={blendGlobalTheme.variant} label={block.label} />}
       onChange={(event, newValue) => {
         onDropdownChange(newValue);
       }}

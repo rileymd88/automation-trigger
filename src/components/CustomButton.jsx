@@ -5,11 +5,11 @@ import { executeBlend } from '../services/backend'
 import { selectAllItems } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 
-export default function CustomButton({block}) {
+export default function CustomButton({block, blendGlobalTheme, blend}) {
   const dispatch = useDispatch();
   const useStyles = makeStyles((theme) => ({
     button: {
-      width: `${block.width}%`,
+      width: `${blend.buttonWidth}%`,
       marginBottom: 12
     }
   }));
@@ -20,7 +20,7 @@ export default function CustomButton({block}) {
   const onButtonClick = async () => {
     try {
       setLoading(true)
-      await executeBlend(block.blend, items)
+      await executeBlend(blend.id, items)
       setLoading(false)
     }
     catch(err) {
@@ -29,16 +29,34 @@ export default function CustomButton({block}) {
     }
   };
 
+  let disabled
+  if(blend.id.length > 1) {
+    if(blend.useEnabledCondition) {
+      if(blend.enabledCondition === 1) {
+        disabled = false
+      }
+      else {
+        disabled = true
+      }
+    }
+    else {
+      disabled = false
+    }
+  }
+  else {
+    disabled = true
+  }
+
   return (
     <LoadingButton
-      disabled={block.blend.length > 1 ? false : true}
+      disabled={disabled}
       className={classes.button}
       pending={loading}
-      pendingIndicator={block.loadingMsg}
+      pendingIndicator={blend.runningBlendLabel}
       variant="contained" 
       color="primary" 
       onClick={onButtonClick}>
-        {block.label}
+        {blend.buttonLabel}
     </LoadingButton>
   );
 }

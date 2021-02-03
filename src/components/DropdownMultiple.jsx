@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/core/Autocomplete';
 
-export default function DropdownMultiple({ block }) {
+export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
   const useStyles = makeStyles((theme) => ({
     dropdown: {
       width: `${block.width}%`,
@@ -30,9 +30,10 @@ export default function DropdownMultiple({ block }) {
   return (
     <Autocomplete
       multiple
+      
       options={options.length > 1 ? options: []}
       className={classes.dropdown}
-      renderInput={(params) => <TextField {...params} label={block.label} />}
+      renderInput={(params) => <TextField {...params} variant={blendGlobalTheme.variant} label={block.label} />}
       onChange={(event, newValue) => {
         onDropdownChange(newValue);
       }}

@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 
-export default function CustomSwitch({block}) {
+export default function CustomSwitch({block, globalTheme, blend}) {
   const dispatch = useDispatch();
   const checked = useSelector(selectAllItems)[block.index]
   const useStyles = makeStyles((theme) => ({

@@ -9,6 +9,7 @@ var component = {
   defaultValue: '',
   options: [
     { value: 'checkbox', label: 'Checkbox' },
+    { value: 'datePicker', label: 'Date picker' },
     { value: 'dropdown', label: 'Dropdown' },
     { value: 'dropdownMultiple', label: 'Dropdown multiple select' },
     { value: 'numberInput', label: 'Number' },
@@ -16,6 +17,14 @@ var component = {
     { value: 'switch', label: 'Switch' },
     { value: 'textInput', label: 'Text' },
   ]
+}
+
+var defaultValue = {
+  type: 'string',
+  ref: 'defaultValue',
+  label: 'Default value',
+  defaultValue: '',
+  expression: 'optional'
 }
 
 var width = {
@@ -177,6 +186,7 @@ var config = {
           addTranslation: 'Add items',
           items: {
             component: component,
+            defaultValue: defaultValue,
             step: step,
             min: min,
             max: max,
@@ -196,15 +206,100 @@ var config = {
 };
 
 var blends = {
-  label: 'Blends',
+  label: 'Select a blend',
   component: 'expression-with-dropdown',
   dropdownOnly: true,
   type: 'string',
-  ref: 'blend',
+  ref: 'blend.id',
   defaultValue: '',
   options: function() {
     return getBlends()
   }
+}
+
+var buttonLabel = {
+  type: 'string',
+  ref: 'blend.buttonLabel',
+  label: 'Button label',
+  defaultValue: 'Run blend',
+  expression: 'optional'
+}
+
+var runningBlendLabel = {
+  type: 'string',
+  ref: 'blend.runningBlendLabel',
+  label: 'Button loading message',
+  defaultValue: 'Running blend...',
+  expression: 'optional'
+}
+
+var buttonWidth = {
+  type: "number",
+  component: "slider",
+  label: "Button width",
+  ref: "blend.buttonWidth",
+  min: 10,
+  max: 100,
+  step: 1,
+  defaultValue: 100
+}
+
+var buttonAlignment = {
+  component: 'item-selection-list',
+  type: 'string',
+  ref: 'alignment',
+  translation: 'properties.Alignment',
+  horizontal: true,
+  defaultValue: 'left',
+  items: [
+    {
+      component: 'icon-item',
+      icon: 'align_left',
+      value: 'left',
+      translation: 'properties.dock.left',
+      labelPlacement: 'bottom',
+    },
+    {
+      component: 'icon-item',
+      icon: 'align_center',
+      value: 'center',
+      translation: 'Common.Center',
+      labelPlacement: 'bottom',
+    },
+    {
+      component: 'icon-item',
+      icon: 'align_right',
+      value: 'right',
+      translation: 'properties.dock.right',
+      labelPlacement: 'bottom',
+    },
+  ],
+}
+
+var useCondition = {
+  type: 'boolean',
+  component: 'switch',
+  translation: 'Condition to enable blend',
+  ref: 'blend.useEnabledCondition',
+  defaultValue: false,
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+}
+
+var condition = {
+  ref: 'blend.enabledCondition',
+  translation: 'properties.enableCondition',
+  type: 'integer',
+  expression: 'optional',
+  show: (data) => data.blend.useEnabledCondition,
 }
 
 var blend = {
@@ -212,19 +307,104 @@ var blend = {
   label: "Blend",
   component: "items",
   items: {
-    blends: blends
+    blends: blends,
+    buttonLabel: buttonLabel,
+    runningBlendLabel: runningBlendLabel,
+    buttonWidth: buttonWidth,
+    buttonAlignment: buttonAlignment,
+    useCondition: useCondition,
+    condition: condition
   }
-}  
+}
+
+var general = {
+  type: 'items',
+  translation: 'properties.general',
+  items: {
+    showTitles: {},
+    details: {
+      show: false,
+    },
+    label: {
+      component: 'string',
+      ref: 'style.label',
+      translation: 'Common.Label',
+      expression: 'optional',
+    },
+  },
+}
+
+var variant = {
+  label: 'Variant type',
+  component: 'dropdown',
+  type: 'string',
+  ref: 'blendGlobalTheme.variant',
+  defaultValue: 'standard',
+  options: [
+    { value: 'filled', label: 'Filled' },
+    { value: 'outlined', label: 'Outlined' },
+    { value: 'standard', label: 'Standard' },
+  ]
+}
+
+var colorPickerPrimary = {
+  component: 'color-picker',
+  type: 'object',
+  ref: 'blendGlobalTheme.primaryColor',
+  translation: 'Primary color',
+  dualOutput: true,
+  defaultValue: {
+    color: "ff5866",
+    index: "-1"
+  }
+}
+
+var colorPickerSecondary = {
+  component: 'color-picker',
+  type: 'object',
+  ref: 'blendGlobalTheme.secondaryColor',
+  translation: 'Secondary color',
+  dualOutput: true,
+  defaultValue: {
+    color: "ff5866",
+    index: "-1"
+  }
+}
+
+var theme = {
+  grouped: true,
+  type: 'items',
+  translation: 'Theme',
+  items: {
+    colorPickerPrimary: colorPickerPrimary,
+    colorPickerSecondary: colorPickerSecondary,
+    variant: variant
+  }
+}
 
 export default {
   definition: {
     type: 'items',
     component: 'accordion',
     items: {
+      dimensions: {
+        uses: "dimensions",
+        min: 0,
+        max: 20
+      },
+      measures: {
+        uses: "measures",
+        min: 0,
+        max: 20
+      },
       config: config,
       blend: blend,
       settings: {
         uses: 'settings',
+        items: {
+          general: general,
+          theme: theme
+        }
       },
     },
   },

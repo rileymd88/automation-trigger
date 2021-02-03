@@ -6,9 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 
-export default function TextInput({block, blendGlobalTheme, blend}) {
+export default function DatePicker({block, blendGlobalTheme, blend}) {
   const dispatch = useDispatch();
-  const text = useSelector(selectAllItems)[block.index]
+  const date = useSelector(function(state){
+    return state
+  })
+  console.log(date)
   const useStyles = makeStyles((theme) => ({
     textField: {
       width: `${block.width}%`,
@@ -17,21 +20,29 @@ export default function TextInput({block, blendGlobalTheme, blend}) {
   }));
   const classes = useStyles();
 
-  const onTextChange = (e) => {
+  const onDateChange = (newValue) => {
     const payload = {
       ref: block.ref,
-      data: e.target.value
+      data: newValue
     }
     dispatch(setItem(payload))
   };
 
   return (
+    <DatePicker
+    label="Year only"
+    value={date}
+    onChange={(newValue) => {
+      onDateChange(newValue);
+    }}
+    renderInput={(params) => (
       <TextField
-        variant={blendGlobalTheme.variant}
-        value={text}
-        className={classes.textField}
-        label={block.label}
-        onChange={onTextChange}
-        type="string" />
+        {...params}
+        margin="normal"
+        helperText={null}
+        variant="standard"
+      />
+    )}
+  />
   );
 }

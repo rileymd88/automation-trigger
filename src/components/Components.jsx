@@ -7,6 +7,7 @@ import Dropdown from "./Dropdown"
 import CustomSwitch from "./CustomSwitch"
 import CustomSlider from "./CustomSlider";
 import CustomButton from "./CustomButton";
+import CustomDatePicker from "./CustomDatePicker";
 
 const Components = {
   textInput: TextInput,
@@ -16,14 +17,17 @@ const Components = {
   dropdownMultiple: DropdownMultiple,
   switch: CustomSwitch,
   slider: CustomSlider,
-  button: CustomButton
+  button: CustomButton,
+  datePicker: CustomDatePicker
 };
 
-export default block => {
+export default (block, blendGlobalTheme, blend) => {
   if (typeof Components[block.component] !== "undefined") {
     return React.createElement(Components[block.component], {
       key: block.id,
-      block: block
+      block: block,
+      blendGlobalTheme: blendGlobalTheme,
+      blend: blend
     });
   }
 }

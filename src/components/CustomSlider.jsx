@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 
-export default function CustomSlider({block}) {
+export default function CustomSlider({block, globalTheme, blend}) {
   const dispatch = useDispatch();
   const value = useSelector(selectAllItems)[block.index]
   const useStyles = makeStyles((theme) => ({

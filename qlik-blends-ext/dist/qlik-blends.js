@@ -15495,6 +15495,9 @@
       items: {}
     },
     reducers: {
+      setForms: (state, action) => {
+        state.items = action.payload;
+      },
       setItem: (state, action) => {
         state.items[action.payload.ref] = action.payload.data;
       },
@@ -15928,7 +15931,9 @@
   setBatch(reactDom.unstable_batchedUpdates);
 
   function TextInput({
-    block
+    block,
+    blendGlobalTheme,
+    blend
   }) {
     const dispatch = useDispatch();
     const text = useSelector(selectAllItems)[block.index];
@@ -15949,6 +15954,7 @@
     };
 
     return react.createElement(TextField$1, {
+      variant: blendGlobalTheme.variant,
       value: text,
       className: classes.textField,
       label: block.label,
@@ -15958,7 +15964,9 @@
   }
 
   function NumberInput({
-    block
+    block,
+    blendGlobalTheme,
+    blend
   }) {
     const dispatch = useDispatch();
     const text = useSelector(selectAllItems)[block.index];
@@ -15979,6 +15987,7 @@
     };
 
     return react.createElement(TextField$1, {
+      variant: blendGlobalTheme.variant,
       value: text,
       className: classes.numberField,
       label: block.label,
@@ -17308,7 +17317,9 @@
   })(FormControlLabel);
 
   function CustomCheckbox({
-    block
+    block,
+    globalTheme,
+    blend
   }) {
     const useStyles = makeStyles$1(theme => ({
       numberField: {
@@ -21170,7 +21181,9 @@
   })(Autocomplete);
 
   function DropdownMultiple({
-    block
+    block,
+    blendGlobalTheme,
+    blend
   }) {
     const useStyles = makeStyles$1(theme => ({
       dropdown: {
@@ -21196,6 +21209,7 @@
       options: options.length > 1 ? options : [],
       className: classes.dropdown,
       renderInput: params => react.createElement(TextField$1, _extends$2({}, params, {
+        variant: blendGlobalTheme.variant,
         label: block.label
       })),
       onChange: (event, newValue) => {
@@ -21205,14 +21219,18 @@
   }
 
   function Dropdown({
-    block
+    block,
+    blendGlobalTheme,
+    blend
   }) {
+    console.log(blendGlobalTheme);
     const useStyles = makeStyles$1(theme => ({
       dropdown: {
         width: `${block.width}%`,
         marginBottom: 12
       }
     }));
+    console.log(block);
     const classes = useStyles();
     const checked = useSelector(selectAllItems)[block.index];
     const dispatch = useDispatch();
@@ -21227,9 +21245,12 @@
     };
 
     return react.createElement(Autocomplete$1, {
+      defaultValue: block.defaultValue,
+      variant: blendGlobalTheme.variant,
       options: options.length > 1 ? options : [],
       className: classes.dropdown,
       renderInput: params => react.createElement(TextField$1, _extends$2({}, params, {
+        variant: blendGlobalTheme.variant,
         label: block.label
       })),
       onChange: (event, newValue) => {
@@ -21426,7 +21447,9 @@
   })(Switch);
 
   function CustomSwitch({
-    block
+    block,
+    globalTheme,
+    blend
   }) {
     const dispatch = useDispatch();
     const checked = useSelector(selectAllItems)[block.index];
@@ -21819,7 +21842,9 @@
   });
 
   function CustomSlider({
-    block
+    block,
+    globalTheme,
+    blend
   }) {
     const dispatch = useDispatch();
     const value = useSelector(selectAllItems)[block.index];
@@ -22329,12 +22354,14 @@
   })(LoadingButton);
 
   function CustomButton({
-    block
+    block,
+    blendGlobalTheme,
+    blend
   }) {
     const dispatch = useDispatch();
     const useStyles = makeStyles$1(theme => ({
       button: {
-        width: `${block.width}%`,
+        width: `${blend.buttonWidth}%`,
         marginBottom: 12
       }
     }));
@@ -22345,7 +22372,7 @@
     const onButtonClick = async () => {
       try {
         setLoading(true);
-        await executeBlend(block.blend, items);
+        await executeBlend(blend.id, items);
         setLoading(false);
       } catch (err) {
         setLoading(false);
@@ -22353,15 +22380,71 @@
       }
     };
 
+    let disabled;
+
+    if (blend.id.length > 1) {
+      if (blend.useEnabledCondition) {
+        if (blend.enabledCondition === 1) {
+          disabled = false;
+        } else {
+          disabled = true;
+        }
+      } else {
+        disabled = false;
+      }
+    } else {
+      disabled = true;
+    }
+
     return react.createElement(LoadingButton$1, {
-      disabled: block.blend.length > 1 ? false : true,
+      disabled: disabled,
       className: classes.button,
       pending: loading,
-      pendingIndicator: block.loadingMsg,
+      pendingIndicator: blend.runningBlendLabel,
       variant: "contained",
       color: "primary",
       onClick: onButtonClick
-    }, block.label);
+    }, blend.buttonLabel);
+  }
+
+  function DatePicker({
+    block,
+    blendGlobalTheme,
+    blend
+  }) {
+    const dispatch = useDispatch();
+    const date = useSelector(function (state) {
+      return state;
+    });
+    console.log(date);
+    const useStyles = makeStyles$1(theme => ({
+      textField: {
+        width: `${block.width}%`,
+        marginBottom: 12
+      }
+    }));
+    const classes = useStyles();
+
+    const onDateChange = newValue => {
+      const payload = {
+        ref: block.ref,
+        data: newValue
+      };
+      dispatch(setItem(payload));
+    };
+
+    return react.createElement(DatePicker, {
+      label: "Year only",
+      value: date,
+      onChange: newValue => {
+        onDateChange(newValue);
+      },
+      renderInput: params => react.createElement(TextField$1, _extends$2({}, params, {
+        margin: "normal",
+        helperText: null,
+        variant: "standard"
+      }))
+    });
   }
 
   const Components = {
@@ -22372,13 +22455,16 @@
     dropdownMultiple: DropdownMultiple,
     switch: CustomSwitch,
     slider: CustomSlider,
-    button: CustomButton
+    button: CustomButton,
+    datePicker: DatePicker
   };
-  var Components$1 = (block => {
+  var Components$1 = ((block, blendGlobalTheme, blend) => {
     if (typeof Components[block.component] !== "undefined") {
       return react.createElement(Components[block.component], {
         key: block.id,
-        block: block
+        block: block,
+        blendGlobalTheme: blendGlobalTheme,
+        blend: blend
       });
     }
   });
@@ -22621,16 +22707,13 @@
     }, other));
   });
 
-  function render$1(element, items) {
-    const formItems = items.map(item => Components$1(item));
+  function render$1(element, items, blendGlobalTheme, blend) {
+    const formItems = items.map(item => Components$1(item, blendGlobalTheme, blend));
     reactDom.render(react.createElement(Provider, {
       store: store
     }, react.createElement(Grid, {
       container: true,
-      direction: "column",
-      root: {
-        width: '100%'
-      }
+      direction: "column"
     }, formItems)), element);
   }
 
@@ -22643,24 +22726,39 @@
 
       component() {
         const el = stardust.useElement();
-        const layout = stardust.useLayout();
-        stardust.useEffect(() => {}, []);
-        const button = {
-          ref: 'actionButton',
-          component: 'button',
-          label: 'Run blend!',
-          loadingMsg: 'Running blend...',
-          width: '100%',
-          blend: layout.blend
-        };
-        const formItems = layout.items;
-        const index = formItems.findIndex(f => f.component === 'button');
+        const layout = stardust.useLayout(); //const allItems = useSelector(selectAllItems)
 
-        if (index === -1) {
-          formItems.push(button);
-        }
+        stardust.useEffect(() => {
+          const button = {
+            ref: 'actionButton',
+            component: 'button',
+            blend: layout.blend.id
+          };
+          const blendGlobalTheme = layout.blendGlobalTheme;
+          const blend = layout.blend;
+          const formItems = layout.items;
+          const index = formItems.findIndex(f => f.component === 'button');
 
-        render$1(el, formItems);
+          if (index === -1) {
+            formItems.push(button);
+          }
+
+          render$1(el, formItems, blendGlobalTheme, blend);
+        }, [layout]);
+        /* useEffect(() => {
+          layout.items.map(function(item){
+            // new key
+            if(typeof allItems[item.ref] === 'undefined') {
+              dispatch(setItem(item.ref, item.defaultValue))
+            }
+          })
+          allItems.map(function(item){
+            // key no longer exists
+            if(typeof layout.items[item.ref] === 'undefined') {
+              dispatch(removeItem(item.ref))
+            }
+          })
+        }, [...layout.items.map(i => i.ref)]); */
       }
 
     };

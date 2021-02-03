@@ -6,8 +6,8 @@ import { Provider } from "react-redux";
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from "@material-ui/core/styles";
 
-export function render(element, items) {
-  const formItems = items.map((item) => Components(item));
+export function render(element, items, blendGlobalTheme, blend) {
+  const formItems = items.map((item) => Components(item, blendGlobalTheme, blend));
   ReactDOM.render(
     <Provider store={store}>
       <Grid container direction='column'>{formItems}</Grid>

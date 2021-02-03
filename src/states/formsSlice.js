@@ -6,6 +6,9 @@ export const slice = createSlice({
     items: {},
   },
   reducers: {
+    setForms: (state, action) => {
+      state.items = action.payload
+    },
     setItem: (state, action) => {
       state.items[action.payload.ref] = action.payload.data
     },
@@ -16,7 +19,10 @@ export const slice = createSlice({
 });
 
 export const selectAllItems = state => state.forms.items;
-export const selectItem = (state, ref) => Object.filter(state.forms.items, key => key === ref)
+export const selectItem = function(state, ref) {
+  console.log(state, ref)
+  Object.filter(state.forms.items, key => key === ref)
+} 
 export const { setItem, removeItem } = slice.actions;
 
 Object.filter = (obj, predicate) => 

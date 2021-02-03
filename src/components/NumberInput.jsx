@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 
-export default function NumberInput({block}) {
+export default function NumberInput({block, blendGlobalTheme, blend}) {
   const dispatch = useDispatch();
   const text = useSelector(selectAllItems)[block.index]
   const useStyles = makeStyles((theme) => ({
@@ -27,6 +27,7 @@ export default function NumberInput({block}) {
 
   return (
       <TextField
+        variant={blendGlobalTheme.variant}
         value={text}
         className={classes.numberField}
         label={block.label}

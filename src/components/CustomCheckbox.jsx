@@ -5,7 +5,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { setItem, selectAllItems, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 
-export default function CustomCheckbox({ block }) {
+export default function CustomCheckbox({block, globalTheme, blend}) {
   const useStyles = makeStyles((theme) => ({
     numberField: {
       width: `${block.width}%`,
