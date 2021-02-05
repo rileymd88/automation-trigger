@@ -7,6 +7,7 @@
 .npmrc
 
 node_modules
+dist
 coverage
 blendr.js
 qlik-blends-ext
