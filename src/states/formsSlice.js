@@ -20,8 +20,12 @@ export const slice = createSlice({
 
 export const selectAllItems = state => state.forms.items;
 export const selectItem = function(state, ref) {
-  console.log(state, ref)
-  Object.filter(state.forms.items, key => key === ref)
+  if(typeof state.forms.items[ref] !== 'undefined') {
+    return state.forms.items[ref]
+  }
+  else {
+    return 'undefined'
+  }
 } 
 export const { setItem, removeItem } = slice.actions;
 

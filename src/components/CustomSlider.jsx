@@ -9,16 +9,29 @@ import { useSelector, useDispatch } from 'react-redux';
 
 export default function CustomSlider({block, globalTheme, blend}) {
   const dispatch = useDispatch();
-  const value = useSelector(selectAllItems)[block.index]
+  let value
+  const tmpValue = useSelector(state => selectItem(state, block.ref))
+  if(tmpValue === 'undefined') {
+    const payload = {
+      ref: block.ref,
+      data: block.defaultValueNumber
+    }
+    dispatch(setItem(payload))
+    value = block.defaultValueNumber
+  }
+  else {
+    value = tmpValue
+  }
   const useStyles = makeStyles((theme) => ({
     slider: {
       width: `${block.width}%`,
-      marginBottom: 12
+      marginBottom: 12,
+      alignSelf: block.alignment
     }
   }));
   const classes = useStyles();
 
-  const onTextChange = (e) => {
+  const onSliderChange = (e) => {
     const payload = {
       ref: block.ref,
       data: e.target.value
@@ -32,6 +45,7 @@ export default function CustomSlider({block, globalTheme, blend}) {
     {block.label}
   </Typography>
   <Slider
+    onChange={onSliderChange}
     className={classes.slider}
     value={value}
     valueLabelDisplay="auto"

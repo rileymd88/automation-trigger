@@ -17,17 +17,18 @@ const Components = {
   dropdownMultiple: DropdownMultiple,
   switch: CustomSwitch,
   slider: CustomSlider,
-  button: CustomButton,
-  datePicker: CustomDatePicker
+  button: CustomButton
 };
 
-export default (block, blendGlobalTheme, blend) => {
+export default (block, blendGlobalTheme, blend, refs, getData) => {
   if (typeof Components[block.component] !== "undefined") {
     return React.createElement(Components[block.component], {
       key: block.id,
       block: block,
       blendGlobalTheme: blendGlobalTheme,
-      blend: blend
+      blend: blend,
+      refs: refs,
+      getData: getData
     });
   }
 }

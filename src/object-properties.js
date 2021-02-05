@@ -4,7 +4,7 @@ const properties = {
   subtitle: '',
   footnote: '',
   qHyperCubeDef: {
-    qInitialDataFetch: [{ qWidth: 10, qHeight: 1000 }],
+    qInitialDataFetch: [{ qWidth: 20, qHeight: 500 }],
   },
 };
 

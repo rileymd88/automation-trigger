@@ -8,11 +8,24 @@ import { useSelector, useDispatch } from 'react-redux';
 
 export default function NumberInput({block, blendGlobalTheme, blend}) {
   const dispatch = useDispatch();
-  const text = useSelector(selectAllItems)[block.index]
+  let value
+  const tmpValue = useSelector(state => selectItem(state, block.ref))
+  if(tmpValue === 'undefined') {
+    const payload = {
+      ref: block.ref,
+      data: block.defaultValueNumber
+    }
+    dispatch(setItem(payload))
+    value = block.defaultValueNumber
+  }
+  else {
+    value = tmpValue
+  }
   const useStyles = makeStyles((theme) => ({
     numberField: {
       width: `${block.width}%`,
-      marginBottom: 12
+      marginBottom: 12,
+      alignSelf: block.alignment
     }
   }));
   const classes = useStyles();
@@ -28,7 +41,7 @@ export default function NumberInput({block, blendGlobalTheme, blend}) {
   return (
       <TextField
         variant={blendGlobalTheme.variant}
-        value={text}
+        value={value}
         className={classes.numberField}
         label={block.label}
         onChange={onNumberChange}

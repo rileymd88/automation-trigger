@@ -9,7 +9,6 @@ var component = {
   defaultValue: '',
   options: [
     { value: 'checkbox', label: 'Checkbox' },
-    { value: 'datePicker', label: 'Date picker' },
     { value: 'dropdown', label: 'Dropdown' },
     { value: 'dropdownMultiple', label: 'Dropdown multiple select' },
     { value: 'numberInput', label: 'Number' },
@@ -19,13 +18,57 @@ var component = {
   ]
 }
 
-var defaultValue = {
+const types = {
+  checkbox: 'boolean',
+  dropdown: 'string'
+}
+
+const stringComponents = ['dropdown','dropdownMultiple', 'textInput']
+const numberComponents = ['numberInput', 'slider', 'switch', 'checkbox']
+const booleanComponents = ['switch', 'checkbox']
+
+var defaultValueString = {
   type: 'string',
-  ref: 'defaultValue',
+  ref: 'defaultValueString',
   label: 'Default value',
   defaultValue: '',
-  expression: 'optional'
+  expression: 'optional',
+  show: function(item) {
+    return stringComponents.includes(item.component)
+  }
 }
+
+var defaultValueNumber = {
+  type: 'number',
+  ref: 'defaultValueNumber',
+  label: 'Default value',
+  defaultValue: 1,
+  expression: 'optional',
+  show: function(item) {
+    return numberComponents.includes(item.component)
+  }
+}
+
+/* var defaultValueBoolean = {
+  type: 'boolean',
+  component: 'switch',
+  ref: 'defaultValueBoolean',
+  label: 'Default value',
+  defaultValue: false,
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  show: function(item) {
+    return booleanComponents.includes(item.component)
+  }
+} */
 
 var width = {
   type: "number",
@@ -137,12 +180,12 @@ var alignment = {
   ref: 'alignment',
   translation: 'properties.Alignment',
   horizontal: true,
-  defaultValue: 'left',
+  defaultValue: 'flex-start',
   items: [
     {
       component: 'icon-item',
       icon: 'align_left',
-      value: 'left',
+      value: 'flex-start',
       translation: 'properties.dock.left',
       labelPlacement: 'bottom',
     },
@@ -156,7 +199,7 @@ var alignment = {
     {
       component: 'icon-item',
       icon: 'align_right',
-      value: 'right',
+      value: 'flex-end',
       translation: 'properties.dock.right',
       labelPlacement: 'bottom',
     },
@@ -186,7 +229,8 @@ var config = {
           addTranslation: 'Add items',
           items: {
             component: component,
-            defaultValue: defaultValue,
+            defaultValueString: defaultValueString,
+            defaultValueNumber: defaultValueNumber,
             step: step,
             min: min,
             max: max,
@@ -247,15 +291,15 @@ var buttonWidth = {
 var buttonAlignment = {
   component: 'item-selection-list',
   type: 'string',
-  ref: 'alignment',
+  ref: 'blend.alignment',
   translation: 'properties.Alignment',
   horizontal: true,
-  defaultValue: 'left',
+  defaultValue: 'flex-start',
   items: [
     {
       component: 'icon-item',
       icon: 'align_left',
-      value: 'left',
+      value: 'flex-start',
       translation: 'properties.dock.left',
       labelPlacement: 'bottom',
     },
@@ -269,7 +313,7 @@ var buttonAlignment = {
     {
       component: 'icon-item',
       icon: 'align_right',
-      value: 'right',
+      value: 'flex-end',
       translation: 'properties.dock.right',
       labelPlacement: 'bottom',
     },
@@ -321,7 +365,7 @@ var general = {
   type: 'items',
   translation: 'properties.general',
   items: {
-    showTitles: {},
+    showTitles: false,
     details: {
       show: false,
     },
@@ -354,7 +398,7 @@ var colorPickerPrimary = {
   translation: 'Primary color',
   dualOutput: true,
   defaultValue: {
-    color: "ff5866",
+    color: "#009845",
     index: "-1"
   }
 }
@@ -366,7 +410,7 @@ var colorPickerSecondary = {
   translation: 'Secondary color',
   dualOutput: true,
   defaultValue: {
-    color: "ff5866",
+    color: "#757575",
     index: "-1"
   }
 }

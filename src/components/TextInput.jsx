@@ -8,11 +8,24 @@ import { useSelector, useDispatch } from 'react-redux';
 
 export default function TextInput({block, blendGlobalTheme, blend}) {
   const dispatch = useDispatch();
-  const text = useSelector(selectAllItems)[block.index]
+  let value
+  const tmpValue = useSelector(state => selectItem(state, block.ref))
+  if(tmpValue === 'undefined') {
+    const payload = {
+      ref: block.ref,
+      data: block.defaultValueString
+    }
+    dispatch(setItem(payload))
+    value = block.defaultValueString
+  }
+  else {
+    value = tmpValue
+  }
   const useStyles = makeStyles((theme) => ({
     textField: {
       width: `${block.width}%`,
-      marginBottom: 12
+      marginBottom: 12,
+      alignSelf: block.alignment
     }
   }));
   const classes = useStyles();
@@ -28,7 +41,7 @@ export default function TextInput({block, blendGlobalTheme, blend}) {
   return (
       <TextField
         variant={blendGlobalTheme.variant}
-        value={text}
+        value={value}
         className={classes.textField}
         label={block.label}
         onChange={onTextChange}

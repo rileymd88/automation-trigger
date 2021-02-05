@@ -8,15 +8,29 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/core/Autocomplete';
 
 export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
+  const dispatch = useDispatch();
   const useStyles = makeStyles((theme) => ({
     dropdown: {
       width: `${block.width}%`,
-      marginBottom: 12
+      marginBottom: 12,
+      alignSelf: block.alignment
     },
   }));
   const classes = useStyles();
-  const checked = useSelector(selectAllItems)[block.index];
-  const dispatch = useDispatch();
+  let value
+  const tmpValue = useSelector(state => selectItem(state, block.ref))
+  if(tmpValue === 'undefined') {
+    const payload = {
+      ref: block.ref,
+      data: block.defaultValueString
+    }
+    dispatch(setItem(payload))
+    value = block.defaultValueString
+  }
+  else {
+    value = tmpValue
+  }
+  
   const options = block.dropdownOptions === "" || typeof block.dropdownOptions === 'undefined' ? [] : block.dropdownOptions.split(',')
 
   const onDropdownChange = (newValue) => {
@@ -30,7 +44,7 @@ export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
   return (
     <Autocomplete
       multiple
-      
+      value={value}
       options={options.length > 1 ? options: []}
       className={classes.dropdown}
       renderInput={(params) => <TextField {...params} variant={blendGlobalTheme.variant} label={block.label} />}

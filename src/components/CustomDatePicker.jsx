@@ -3,15 +3,29 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { setItem, selectAllItems, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
+import { DatePicker } from '@material-ui/lab';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 
 
 
-export default function DatePicker({block, blendGlobalTheme, blend}) {
+export default function CustomDatePicker({block, blendGlobalTheme, blend}) {
+  console.log(block)
   const dispatch = useDispatch();
-  const date = useSelector(function(state){
-    return state
-  })
-  console.log(date)
+  let date
+  const tmpDate = useSelector(state => selectItem(state, block.ref))
+  if(tmpDate === 'undefined') {
+    const payload = {
+      ref: block.ref,
+      data: block.defaultValue
+    }
+    dispatch(setItem(payload))
+    date = block.defaultValue
+  }
+  else {
+    date = tmpDate
+  }
+  
   const useStyles = makeStyles((theme) => ({
     textField: {
       width: `${block.width}%`,
@@ -29,20 +43,15 @@ export default function DatePicker({block, blendGlobalTheme, blend}) {
   };
 
   return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
     <DatePicker
-    label="Year only"
-    value={date}
-    onChange={(newValue) => {
-      onDateChange(newValue);
-    }}
-    renderInput={(params) => (
-      <TextField
-        {...params}
-        margin="normal"
-        helperText={null}
-        variant="standard"
-      />
-    )}
-  />
+      value={null}
+      label={block.label}
+      onChange={(newValue) => {
+        setValue(newValue);
+      }}
+      renderInput={(params) => <TextField {...params} variant={blendGlobalTheme.variant} />}
+    />
+  </LocalizationProvider>
   );
 }

@@ -9,11 +9,25 @@ import { useSelector, useDispatch } from 'react-redux';
 
 export default function CustomSwitch({block, globalTheme, blend}) {
   const dispatch = useDispatch();
-  const checked = useSelector(selectAllItems)[block.index]
+  let value
+  const tmpValue = useSelector(state => selectItem(state, block.ref))
+  const defaultValue = block.defaultValueNumber === 1 ? true : false
+  if(tmpValue === 'undefined') {
+    const payload = {
+      ref: block.ref,
+      data: defaultValue
+    }
+    dispatch(setItem(payload))
+    value = defaultValue
+  }
+  else {
+    value = tmpValue
+  }
   const useStyles = makeStyles((theme) => ({
     switch: {
       width: `${block.width}%`,
-      marginBottom: 12
+      marginBottom: 12,
+      alignSelf: block.alignment
     }
   }));
   const classes = useStyles();
@@ -21,7 +35,7 @@ export default function CustomSwitch({block, globalTheme, blend}) {
   const onSwitchChange = (e) => {
     const payload = {
       ref: block.ref,
-      data: e.target.value
+      data: e.target.checked
     }
     dispatch(setItem(payload))
   };
@@ -31,7 +45,7 @@ export default function CustomSwitch({block, globalTheme, blend}) {
     className={classes.switch}
     control={
       <Switch
-        checked={checked}
+        checked={value}
         onChange={onSwitchChange}
         color="primary"
       />

@@ -5,12 +5,13 @@ import { executeBlend } from '../services/backend'
 import { selectAllItems } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 
-export default function CustomButton({block, blendGlobalTheme, blend}) {
+export default function CustomButton({blend, refs, getData}) {
   const dispatch = useDispatch();
   const useStyles = makeStyles((theme) => ({
     button: {
       width: `${blend.buttonWidth}%`,
-      marginBottom: 12
+      alignSelf: blend.alignment,
+      height: 'auto'
     }
   }));
   const classes = useStyles();
@@ -20,7 +21,13 @@ export default function CustomButton({block, blendGlobalTheme, blend}) {
   const onButtonClick = async () => {
     try {
       setLoading(true)
-      await executeBlend(blend.id, items)
+      let clone = {...items}
+      for(const key in clone) {
+        if(!refs.includes(key)) {
+          delete clone[key]
+        }
+      }
+      await executeBlend(blend.id, {form: clone, data: getData()})
       setLoading(false)
     }
     catch(err) {

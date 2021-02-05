@@ -58,9 +58,6 @@
       value: 'checkbox',
       label: 'Checkbox'
     }, {
-      value: 'datePicker',
-      label: 'Date picker'
-    }, {
       value: 'dropdown',
       label: 'Dropdown'
     }, {
@@ -80,13 +77,49 @@
       label: 'Text'
     }]
   };
-  var defaultValue = {
+  const stringComponents = ['dropdown', 'dropdownMultiple', 'textInput'];
+  const numberComponents = ['numberInput', 'slider', 'switch', 'checkbox'];
+  var defaultValueString = {
     type: 'string',
-    ref: 'defaultValue',
+    ref: 'defaultValueString',
     label: 'Default value',
     defaultValue: '',
-    expression: 'optional'
+    expression: 'optional',
+    show: function (item) {
+      return stringComponents.includes(item.component);
+    }
   };
+  var defaultValueNumber = {
+    type: 'number',
+    ref: 'defaultValueNumber',
+    label: 'Default value',
+    defaultValue: 1,
+    expression: 'optional',
+    show: function (item) {
+      return numberComponents.includes(item.component);
+    }
+  };
+  /* var defaultValueBoolean = {
+    type: 'boolean',
+    component: 'switch',
+    ref: 'defaultValueBoolean',
+    label: 'Default value',
+    defaultValue: false,
+    options: [
+      {
+        value: true,
+        translation: 'properties.on',
+      },
+      {
+        value: false,
+        translation: 'properties.off',
+      },
+    ],
+    show: function(item) {
+      return booleanComponents.includes(item.component)
+    }
+  } */
+
   var width = {
     type: "number",
     component: "slider",
@@ -194,11 +227,11 @@
     ref: 'alignment',
     translation: 'properties.Alignment',
     horizontal: true,
-    defaultValue: 'left',
+    defaultValue: 'flex-start',
     items: [{
       component: 'icon-item',
       icon: 'align_left',
-      value: 'left',
+      value: 'flex-start',
       translation: 'properties.dock.left',
       labelPlacement: 'bottom'
     }, {
@@ -210,7 +243,7 @@
     }, {
       component: 'icon-item',
       icon: 'align_right',
-      value: 'right',
+      value: 'flex-end',
       translation: 'properties.dock.right',
       labelPlacement: 'bottom'
     }]
@@ -238,7 +271,8 @@
             addTranslation: 'Add items',
             items: {
               component: component,
-              defaultValue: defaultValue,
+              defaultValueString: defaultValueString,
+              defaultValueNumber: defaultValueNumber,
               step: step,
               min: min,
               max: max,
@@ -294,14 +328,14 @@
   var buttonAlignment = {
     component: 'item-selection-list',
     type: 'string',
-    ref: 'alignment',
+    ref: 'blend.alignment',
     translation: 'properties.Alignment',
     horizontal: true,
-    defaultValue: 'left',
+    defaultValue: 'flex-start',
     items: [{
       component: 'icon-item',
       icon: 'align_left',
-      value: 'left',
+      value: 'flex-start',
       translation: 'properties.dock.left',
       labelPlacement: 'bottom'
     }, {
@@ -313,7 +347,7 @@
     }, {
       component: 'icon-item',
       icon: 'align_right',
-      value: 'right',
+      value: 'flex-end',
       translation: 'properties.dock.right',
       labelPlacement: 'bottom'
     }]
@@ -357,7 +391,7 @@
     type: 'items',
     translation: 'properties.general',
     items: {
-      showTitles: {},
+      showTitles: false,
       details: {
         show: false
       },
@@ -393,7 +427,7 @@
     translation: 'Primary color',
     dualOutput: true,
     defaultValue: {
-      color: "ff5866",
+      color: "#009845",
       index: "-1"
     }
   };
@@ -404,7 +438,7 @@
     translation: 'Secondary color',
     dualOutput: true,
     defaultValue: {
-      color: "ff5866",
+      color: "#757575",
       index: "-1"
     }
   };
