@@ -9,6 +9,7 @@
 node_modules
 coverage
 blendr.js
+qlik-blends-ext
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
