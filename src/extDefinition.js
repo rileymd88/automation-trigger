@@ -171,7 +171,15 @@ var required = {
       translation: 'properties.off',
     },
   ],
-  defaultValue: false
+  defaultValue: false,
+  show: function(item) {
+    if(item.component !== 'switch' && item.component !== 'checkbox') {
+      return true
+    }
+    else {
+      return false
+    }
+}
 }
 
 var alignment = {
@@ -221,7 +229,7 @@ var config = {
           ref: 'items',
           label: 'Items',
           itemTitleRef: function (item) {
-            return item.ref;
+            return `${item.component} ${item.ref}`;
           },
           allowAdd: true,
           allowRemove: true,
@@ -352,10 +360,6 @@ var blend = {
   component: "items",
   items: {
     blends: blends,
-    buttonLabel: buttonLabel,
-    runningBlendLabel: runningBlendLabel,
-    buttonWidth: buttonWidth,
-    buttonAlignment: buttonAlignment,
     useCondition: useCondition,
     condition: condition
   }
@@ -365,7 +369,7 @@ var general = {
   type: 'items',
   translation: 'properties.general',
   items: {
-    showTitles: false,
+    showTitles: {},
     details: {
       show: false,
     },
@@ -426,6 +430,77 @@ var theme = {
   }
 }
 
+var button = {
+  grouped: true,
+  type: 'items',
+  translation: 'Button',
+  items: {
+    buttonLabel: buttonLabel,
+    runningBlendLabel: runningBlendLabel,
+    buttonWidth: buttonWidth,
+    buttonAlignment: buttonAlignment,
+  }
+}
+
+var dialogShow = {
+  ref: 'blendDialog.show',
+  type: 'boolean',
+  component: 'switch',
+  translation: 'Use dialog',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: false
+}
+
+var dialogWidth = {
+  label: 'Dialog width',
+  component: 'expression-with-dropdown',
+  dropdownOnly: true,
+  type: 'string',
+  ref: 'blendDialog.width',
+  defaultValue: '',
+  options: [
+    { value: 'xs', label: 'Extra small' },
+    { value: 'sm', label: 'Small' },
+    { value: 'md', label: 'Medium' },
+    { value: 'lg', label: 'Large' },
+    { value: 'xl', label: 'Extra large' },
+  ],
+  show: function(item) {
+    return item.blendDialog.show
+  }
+}
+
+var dialogTitle = {
+  type: 'string',
+  ref: 'blendDialog.title',
+  label: 'Dialog title',
+  defaultValue: 'Dialog title',
+  expression: 'optional',
+  show: function(item) {
+    return item.blendDialog.show
+  }
+}
+
+var dialog = {
+  grouped: true,
+  type: 'items',
+  translation: 'Dialog',
+  items: {
+    dialogShow: dialogShow,
+    dialogWidth: dialogWidth,
+    dialogTitle: dialogTitle
+  }
+}
+
 export default {
   definition: {
     type: 'items',
@@ -447,6 +522,8 @@ export default {
         uses: 'settings',
         items: {
           general: general,
+          button: button,
+          dialog: dialog,
           theme: theme
         }
       },

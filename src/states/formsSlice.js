@@ -4,6 +4,7 @@ export const slice = createSlice({
   name: 'forms',
   initialState: {
     items: {},
+    dialogOpen: false,
   },
   reducers: {
     setForms: (state, action) => {
@@ -14,6 +15,9 @@ export const slice = createSlice({
     },
     removeItem: (state, action) => {
       delete state.items[action.payload]
+    },
+    setDialog: (state, action) => {
+      state.dialogOpen = action.payload
     },
   },
 });
@@ -27,11 +31,7 @@ export const selectItem = function(state, ref) {
     return 'undefined'
   }
 } 
-export const { setItem, removeItem } = slice.actions;
-
-Object.filter = (obj, predicate) => 
-    Object.keys(obj)
-          .filter( key => predicate(obj[key]) )
-          .reduce( (res, key) => (res[key] = obj[key], res), {} );
+export const selectDialog = state => state.forms.dialogOpen;
+export const { setItem, removeItem, setDialog } = slice.actions;
 
 export default slice.reducer;

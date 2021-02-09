@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
-export function render(element, items, blendGlobalTheme, blend, refs, getData) {
+export function render(element, items, blendGlobalTheme, blend, refs, getData, requiredItems, dialog) {
   const theme = createMuiTheme({
     palette: {
       type: 'light',
@@ -24,13 +24,21 @@ export function render(element, items, blendGlobalTheme, blend, refs, getData) {
     },
   });
   const formItems = items.map((item) => Components(item, blendGlobalTheme, blend));
+  let finalFormItems
+  console.log(dialog)
+  if(dialog.show) {
+    dialog.formItems = formItems
+  }
+  else {
+    finalFormItems = formItems
+  }
+
   ReactDOM.render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
       <Grid container flexDirection='column' height='100%'>
-        {formItems}
-        <div className={{flexGrow: 1}}></div>
-        <CustomButton blend={blend} refs={refs} getData={getData}></CustomButton>
+        {finalFormItems}
+        <CustomButton blend={blend} refs={refs} getData={getData} requiredItems={requiredItems} dialog={dialog}></CustomButton>
       </Grid>
       </ThemeProvider>
     </Provider>,
