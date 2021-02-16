@@ -44,6 +44,7 @@ export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
   return (
     <Autocomplete
       multiple
+      forcePopupIcon={false}
       value={value}
       options={options.length > 1 ? options: []}
       className={classes.dropdown}

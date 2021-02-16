@@ -3,8 +3,6 @@ import properties from './object-properties';
 import extDefinition from './extDefinition'
 import data from './data';
 import { render } from './root';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectAllItems,selectItem, setItem, removeItem } from './states/formsSlice'
 
 export default function supernova() {
   return {
@@ -26,14 +24,19 @@ export default function supernova() {
         const refs = layout.items.map(i => i.ref)
         const requiredItems = layout.items.filter(i => i.required).map(i=>i.ref)
         const dialog = {
+            id: layout.blend.id,
             show: layout.blendDialog.show,
+            buttonWidth: layout.blendDialog.buttonWidth,
+            buttonLabel: layout.blendDialog.buttonLabel,
             width: layout.blendDialog.width,
+            alignment: layout.blendDialog.alignment,
             title: layout.blendDialog.title,
-            buttonLabel: layout.blend.buttonLabel,
-            runningBlendLabel: blend.runningBlendLabel,
-            id: blend.id
-          }
-        
+            useIcon: layout.blendDialog.icon.useIcon,
+            iconType: layout.blendDialog.icon.iconType,
+            iconPosition: layout.blendDialog.icon.position,
+            enabledCondition: layout.blend.enableCondition,
+            useEnabledCondition: layout.blend.useEnabledCondition
+        }
         render(el, formItems, blendGlobalTheme, blend, refs, getData, requiredItems, dialog);
       }, [layout]);
     },

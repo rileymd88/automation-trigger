@@ -10,7 +10,6 @@ import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 
 
 export default function CustomDatePicker({block, blendGlobalTheme, blend}) {
-  console.log(block)
   const dispatch = useDispatch();
   let date
   const tmpDate = useSelector(state => selectItem(state, block.ref))

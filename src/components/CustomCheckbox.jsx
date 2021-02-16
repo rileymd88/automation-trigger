@@ -17,6 +17,7 @@ export default function CustomCheckbox({block, globalTheme, blend}) {
   const classes = useStyles();
   let value
   const tmpValue = useSelector(state => selectItem(state, block.ref))
+
   const defaultValue = block.defaultValueNumber === 1 ? true : false
   if(tmpValue === 'undefined') {
     const payload = {

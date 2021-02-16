@@ -12,7 +12,7 @@ import { executeBlend } from '../services/backend'
 import { selectAllItems, selectItem, setDialog, selectDialog } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 
-function PaperComponent() {
+function PaperComponent(props) {
   return (
     <Draggable
       handle="#draggable-dialog-title"
@@ -23,7 +23,7 @@ function PaperComponent() {
   );
 }
 
-export default function CustomDialog({customButton}) {
+export default function CustomDialog({dialog, customButton}) {
   const dispatch = useDispatch();
   const items = useSelector(selectAllItems)
   const dialogOpen = useSelector(selectDialog)
@@ -56,7 +56,6 @@ export default function CustomDialog({customButton}) {
       console.error(err)
       dispatch(setDialog(false))
     }
-    
   }
 
   return (
@@ -65,6 +64,7 @@ export default function CustomDialog({customButton}) {
     maxWidth={dialog.width}
     open={dialogOpen}
     onClose={onClose}
+    PaperComponent={PaperComponent}
     aria-labelledby="draggable-dialog-title"
   >
     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">{dialog.title}</DialogTitle>
@@ -73,15 +73,7 @@ export default function CustomDialog({customButton}) {
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose}>Cancel</Button>
-      <LoadingButton
-        disabled={dialog.disabled}
-        pending={loading}
-        pendingIndicator={dialog.runningBlendLabel}
-        variant="contained" 
-        color="primary" 
-        onClick={onSave}>
-          {dialog.buttonLabel}
-      </LoadingButton>
+      {customButton}
     </DialogActions>
   </Dialog>
   );

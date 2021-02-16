@@ -1,13 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import LoadingButton from '@material-ui/lab/LoadingButton';
-import CustomDialog from './CustomDialog';
 import { executeBlend } from '../services/backend'
 import { selectAllItems, selectItem, setDialog } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
+import CustomIcon from './CustomIcon'
 
 export default function CustomButton({blend, refs, getData, requiredItems, dialog}) {
-  console.log(requiredItems)
   const dispatch = useDispatch();
   const useStyles = makeStyles((theme) => ({
     button: {
@@ -28,7 +27,6 @@ export default function CustomButton({blend, refs, getData, requiredItems, dialo
   })
 
   const onButtonClick = async () => {
-    if(!dialog.show) {
       try {
         setLoading(true)
         let clone = {...items}
@@ -44,10 +42,9 @@ export default function CustomButton({blend, refs, getData, requiredItems, dialo
         setLoading(false)
         console.error(err)
       }
-    }
-    else {
-      dispatch(setDialog(true))
-    }
+      if(dialog.show) {
+        dispatch(setDialog(false))
+      }
   };
 
   let disabled
@@ -70,16 +67,21 @@ export default function CustomButton({blend, refs, getData, requiredItems, dialo
   if(!requiredItemsFilled) {
     disabled = true
   }
-
-
-  dialog.disabled = disabled
-  dialog.getData = getData
-  dialog.refs = refs
-
+  let startIcon
+  let endIcon
+  if(blend.icon.useIcon) {
+    if(blend.icon.position === 'left') {
+      startIcon = <CustomIcon iconType={blend.icon.iconType}></CustomIcon>
+    }
+    else {
+      endIcon = <CustomIcon iconType={blend.icon.iconType}></CustomIcon>
+    }
+  }
   return (
-    <div>
-      <CustomDialog dialog={dialog}></CustomDialog>  
       <LoadingButton
+        disableElevation
+        startIcon={startIcon}
+        endIcon={endIcon}        
         disabled={disabled}
         className={classes.button}
         pending={loading}
@@ -89,6 +91,5 @@ export default function CustomButton({blend, refs, getData, requiredItems, dialo
         onClick={onButtonClick}>
           {blend.buttonLabel}
       </LoadingButton>
-    </div>
   );
 }

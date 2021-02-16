@@ -1,4 +1,5 @@
 import { getBlends } from './services/backend'
+import luiIcons from './utils/lui-icons';
 
 var component = {
   label: 'Item type',
@@ -280,7 +281,7 @@ var buttonLabel = {
 var runningBlendLabel = {
   type: 'string',
   ref: 'blend.runningBlendLabel',
-  label: 'Button loading message',
+  label: 'Loading message',
   defaultValue: 'Running blend...',
   expression: 'optional'
 }
@@ -293,7 +294,10 @@ var buttonWidth = {
   min: 10,
   max: 100,
   step: 1,
-  defaultValue: 100
+  defaultValue: 100,
+  show: function(item) {
+    return !item.blendDialog.show
+  }
 }
 
 var buttonAlignment = {
@@ -326,6 +330,9 @@ var buttonAlignment = {
       labelPlacement: 'bottom',
     },
   ],
+  show: function(item) {
+    return !item.blendDialog.show
+  }
 }
 
 var useCondition = {
@@ -430,15 +437,51 @@ var theme = {
   }
 }
 
-var button = {
-  grouped: true,
-  type: 'items',
-  translation: 'Button',
-  items: {
-    buttonLabel: buttonLabel,
-    runningBlendLabel: runningBlendLabel,
-    buttonWidth: buttonWidth,
-    buttonAlignment: buttonAlignment,
+var buttonUseIcon = {
+  ref: 'blend.icon.useIcon',
+  type: 'boolean',
+  translation: 'properties.icon.use',
+  component: 'switch',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: false,
+}
+
+var buttonIconType = {
+  ref: 'blend.icon.iconType',
+  component: 'expression-with-dropdown',
+  translation: 'Icon',
+  defaultValue: '',
+  options: luiIcons,
+  expressionType: 'StringExpression',
+  show: function(data) {
+    return data.blend.icon.useIcon
+  }
+}
+var buttonIconPosition = {
+  ref: 'blend.icon.position',
+  component: 'dropdown',
+  translation: 'Common.Position',
+  options: [
+    {
+      translation: 'properties.dock.left',
+      value: 'left',
+    },
+    {
+      translation: 'properties.dock.right',
+      value: 'right',
+    },
+  ],
+  show: function(data) {
+    return data.blend.icon.useIcon
   }
 }
 
@@ -466,7 +509,7 @@ var dialogWidth = {
   dropdownOnly: true,
   type: 'string',
   ref: 'blendDialog.width',
-  defaultValue: '',
+  defaultValue: 'md',
   options: [
     { value: 'xs', label: 'Extra small' },
     { value: 'sm', label: 'Small' },
@@ -490,16 +533,155 @@ var dialogTitle = {
   }
 }
 
+var dialogButtonLabel = {
+  type: 'string',
+  ref: 'blendDialog.buttonLabel',
+  label: 'Button label',
+  defaultValue: 'Open dialog',
+  expression: 'optional',
+  show: function(item) {
+    return item.blendDialog.show
+  }
+}
+
+var dialogUseIcon = {
+  ref: 'blendDialog.icon.useIcon',
+  type: 'boolean',
+  translation: 'properties.icon.use',
+  component: 'switch',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: false,
+  show: function(item) {
+    return item.blendDialog.show
+  }
+}
+
+var dialogIconType = {
+  ref: 'blendDialog.icon.iconType',
+  component: 'expression-with-dropdown',
+  translation: 'Icon',
+  defaultValue: '',
+  options: luiIcons,
+  expressionType: 'StringExpression',
+  show: function(item) {
+    return item.blendDialog.show && item.blendDialog.icon.useIcon
+  }
+}
+var dialogIconPosition = {
+  ref: 'blendDialog.icon.position',
+  component: 'dropdown',
+  translation: 'Common.Position',
+  options: [
+    {
+      translation: 'properties.dock.left',
+      value: 'left',
+    },
+    {
+      translation: 'properties.dock.right',
+      value: 'right',
+    },
+  ],
+  show: function(item) {
+    return item.blendDialog.show && item.blendDialog.icon.useIcon
+  }
+}
+
+var dialogAlignment = {
+  component: 'item-selection-list',
+  type: 'string',
+  ref: 'blendDialog.alignment',
+  translation: 'properties.Alignment',
+  horizontal: true,
+  defaultValue: 'flex-start',
+  items: [
+    {
+      component: 'icon-item',
+      icon: 'align_left',
+      value: 'flex-start',
+      translation: 'properties.dock.left',
+      labelPlacement: 'bottom',
+    },
+    {
+      component: 'icon-item',
+      icon: 'align_center',
+      value: 'center',
+      translation: 'Common.Center',
+      labelPlacement: 'bottom',
+    },
+    {
+      component: 'icon-item',
+      icon: 'align_right',
+      value: 'flex-end',
+      translation: 'properties.dock.right',
+      labelPlacement: 'bottom',
+    },
+  ],
+  show: function(item) {
+    return item.blendDialog.show
+  }
+}
+
+var dialogButtonWidth = {
+  type: "number",
+  component: "slider",
+  label: "Button width",
+  ref: "blendDialog.buttonWidth",
+  min: 10,
+  max: 100,
+  step: 1,
+  defaultValue: 100,
+  show: function(item) {
+    return item.blendDialog.show
+  }
+}
+
 var dialog = {
   grouped: true,
   type: 'items',
   translation: 'Dialog',
   items: {
     dialogShow: dialogShow,
+    dialogButtonLabel: dialogButtonLabel,
+    dialogButtonWidth: dialogButtonWidth,
+    dialogAlignment: dialogAlignment,
+    dialogUseIcon: dialogUseIcon,
+    dialogIconType: dialogIconType,
+    dialogIconPosition: dialogIconPosition,
+    dialogTitle: dialogTitle,
     dialogWidth: dialogWidth,
-    dialogTitle: dialogTitle
   }
 }
+
+var button = {
+  grouped: true,
+  type: 'items',
+  translation: 'Run blend button',
+  items: {
+    buttonLabel: buttonLabel,
+    runningBlendLabel: runningBlendLabel,
+    buttonWidth: buttonWidth,
+    buttonAlignment: buttonAlignment,
+    buttonUseIcon: buttonUseIcon,
+    buttonIconType: buttonIconType,
+    buttonIconPosition: buttonIconPosition
+  }
+}
+
+
+
+
+
+
+
 
 export default {
   definition: {

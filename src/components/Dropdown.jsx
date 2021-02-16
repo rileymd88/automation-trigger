@@ -44,6 +44,7 @@ export default function Dropdown({block, blendGlobalTheme, blend}) {
 
   return (
     <Autocomplete
+      forcePopupIcon={false}
       value={value}
       defaultValue={block.defaultValue}
       variant={blendGlobalTheme.variant}
