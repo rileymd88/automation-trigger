@@ -8,7 +8,6 @@ import { useSelector, useDispatch } from 'react-redux';
 
 export default function DialogButton({dialog}) {
   const dispatch = useDispatch();
-  console.log(dialog)
   let height
   let width
   if(dialog.heightAuto) {

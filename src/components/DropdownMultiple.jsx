@@ -22,10 +22,10 @@ export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
   if(tmpValue === 'undefined') {
     const payload = {
       ref: block.ref,
-      data: block.defaultValueString
+      data: block.defaultValueString.split(',')
     }
     dispatch(setItem(payload))
-    value = block.defaultValueString
+    value = block.defaultValueString.split(',')
   }
   else {
     value = tmpValue
@@ -46,6 +46,7 @@ export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
       multiple
       forcePopupIcon={false}
       value={value}
+      variant={blendGlobalTheme.variant}
       options={options.length > 1 ? options: []}
       className={classes.dropdown}
       renderInput={(params) => <TextField {...params} variant={blendGlobalTheme.variant} label={block.label} />}

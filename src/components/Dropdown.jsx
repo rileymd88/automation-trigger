@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/core/Autocomplete';
 
 export default function Dropdown({block, blendGlobalTheme, blend}) {
+  console.log(block.defaultValue.split(','))
   const dispatch = useDispatch();
   const useStyles = makeStyles((theme) => ({
     dropdown: {
@@ -41,6 +42,8 @@ export default function Dropdown({block, blendGlobalTheme, blend}) {
     };
     dispatch(setItem(payload))
   };
+
+  
 
   return (
     <Autocomplete

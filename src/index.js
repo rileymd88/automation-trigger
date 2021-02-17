@@ -40,7 +40,7 @@ export default function supernova() {
             useIcon: layout.blendDialog.icon.useIcon,
             iconType: layout.blendDialog.icon.iconType,
             iconPosition: layout.blendDialog.icon.position,
-            enabledCondition: layout.blend.enableCondition,
+            enabledCondition: layout.blend.enabledCondition,
             useEnabledCondition: layout.blend.useEnabledCondition
         }
         render(el, formItems, blendGlobalTheme, blend, refs, getData, requiredItems, dialog);
