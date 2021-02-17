@@ -1,5 +1,8 @@
 {
-	"name": "Qlik blends",
-	"icon": "table",
-	"description": "Qlik blends"
+	"name": "qlik-blends",
+	"icon": "cloud",
+  "version": "1.0.0",
+	"description": "Qlik blends",
+  "author": "Riley MacDonald",
+  "type": "visualization"
 }
