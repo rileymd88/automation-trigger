@@ -38,9 +38,12 @@ export default function CustomButton({blend, refs, getData, requiredItems, dialo
   const [loading, setLoading] = React.useState(false)
   let requiredItemsFilled = true
   requiredItems.map(function(ref){
-    const state = useSelector(state => selectItem(state, ref))
-    if(state === "" || typeof state === 'undefined' || state === null) {
-      requiredItemsFilled = false
+    let state
+    for(let s in items) {
+      state = items[s]
+      if(state === "" || typeof state === 'undefined' || state === null) {
+        requiredItemsFilled = false
+      }
     }
   })
 
