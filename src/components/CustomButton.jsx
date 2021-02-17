@@ -8,7 +8,6 @@ import CustomIcon from './CustomIcon'
 
 export default function CustomButton({blend, refs, getData, requiredItems, dialog}) {
   const dispatch = useDispatch();
-  console.log(blend)
   let height
   let width
   if(!dialog.show) {
@@ -25,7 +24,6 @@ export default function CustomButton({blend, refs, getData, requiredItems, dialo
       width = `${blend.buttonWidth}%`
     }
   }
-  console.log(width)
   const useStyles = makeStyles((theme) => ({
     button: {
       width: width,

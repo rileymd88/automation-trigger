@@ -32,7 +32,8 @@ export function render(element, items, blendGlobalTheme, blend, refs, getData, r
     typography: {
       button: {
         textTransform: 'none'
-      }
+      },
+      fontFamily: 'Source Sans Pro,sans-serif'
     }
   });
   const formItems = items.map((item) => Components(item, blendGlobalTheme, blend));
