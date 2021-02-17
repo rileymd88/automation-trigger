@@ -20,6 +20,9 @@ export default function supernova() {
         
         const blendGlobalTheme = layout.blendGlobalTheme
         const blend = layout.blend
+        if(layout.items.length > 0) {
+          blend.buttonHeightAuto = true
+        }
         const formItems = layout.items
         const refs = layout.items.map(i => i.ref)
         const requiredItems = layout.items.filter(i => i.required).map(i=>i.ref)
@@ -28,7 +31,10 @@ export default function supernova() {
             show: layout.blendDialog.show,
             buttonWidth: layout.blendDialog.buttonWidth,
             buttonLabel: layout.blendDialog.buttonLabel,
+            widthAuto: layout.blendDialog.buttonWidthAuto,
             width: layout.blendDialog.width,
+            heightAuto: layout.blendDialog.buttonHeightAuto,
+            height: layout.blendDialog.buttonHeight,
             alignment: layout.blendDialog.alignment,
             title: layout.blendDialog.title,
             useIcon: layout.blendDialog.icon.useIcon,

@@ -65,10 +65,11 @@ export const getBlends = async () => {
 export const executeBlend = (blendId, data) => {
   return new Promise(async function(resolve,reject){
     try {
-      await post(`accounts/account_externalid/blends/${blendId}/run`, data)
-      resolve('Blend run successfully')
+      const response = await post(`accounts/account_externalid/blends/${blendId}/run`, data)
+      resolve(response)
     }
     catch(err) {
+      resolve(err)
       reject(err)
     }
   })

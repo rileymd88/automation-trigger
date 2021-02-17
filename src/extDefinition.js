@@ -296,7 +296,7 @@ var buttonWidth = {
   step: 1,
   defaultValue: 100,
   show: function(item) {
-    return !item.blendDialog.show
+    return !item.blendDialog.show && !item.blend.buttonWidthAuto
   }
 }
 
@@ -306,7 +306,7 @@ var buttonAlignment = {
   ref: 'blend.alignment',
   translation: 'properties.Alignment',
   horizontal: true,
-  defaultValue: 'flex-start',
+  defaultValue: 'center',
   items: [
     {
       component: 'icon-item',
@@ -601,7 +601,7 @@ var dialogAlignment = {
   ref: 'blendDialog.alignment',
   translation: 'properties.Alignment',
   horizontal: true,
-  defaultValue: 'flex-start',
+  defaultValue: 'center',
   items: [
     {
       component: 'icon-item',
@@ -630,6 +630,27 @@ var dialogAlignment = {
   }
 }
 
+var dialogButtonWidthAuto = {
+  ref: 'blendDialog.buttonWidthAuto',
+  type: 'boolean',
+  translation: 'Auto button width',
+  component: 'switch',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: true,
+  show: function(item) {
+    return item.blendDialog.show
+  }
+}
+
 var dialogButtonWidth = {
   type: "number",
   component: "slider",
@@ -640,7 +661,42 @@ var dialogButtonWidth = {
   step: 1,
   defaultValue: 100,
   show: function(item) {
+    return item.blendDialog.show && !item.blendDialog.buttonWidthAuto
+  }
+}
+
+var dialogButtonHeightAuto = {
+  ref: 'blendDialog.buttonHeightAuto',
+  type: 'boolean',
+  translation: 'Auto button height',
+  component: 'switch',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: true,
+  show: function(item) {
     return item.blendDialog.show
+  }
+}
+
+var dialogButtonHeight = {
+  type: "number",
+  component: "slider",
+  label: "Button height",
+  ref: "blendDialog.buttonHeight",
+  min: 10,
+  max: 100,
+  step: 1,
+  defaultValue: 100,
+  show: function(item) {
+    return !item.blendDialog.buttonHeightAuto && item.blendDialog.show
   }
 }
 
@@ -651,6 +707,9 @@ var dialog = {
   items: {
     dialogShow: dialogShow,
     dialogButtonLabel: dialogButtonLabel,
+    dialogButtonHeightAuto: dialogButtonHeightAuto,
+    dialogButtonHeight: dialogButtonHeight,
+    dialogButtonWidthAuto: dialogButtonWidthAuto,
     dialogButtonWidth: dialogButtonWidth,
     dialogAlignment: dialogAlignment,
     dialogUseIcon: dialogUseIcon,
@@ -661,6 +720,139 @@ var dialog = {
   }
 }
 
+
+
+var successMessageShow = {
+  ref: 'blend.showSuccessMsg',
+  type: 'boolean',
+  translation: 'Show notification',
+  component: 'switch',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: true,
+}
+
+var successMessageShowOutput = {
+  ref: 'blend.showSuccessMsgOutput',
+  type: 'boolean',
+  translation: 'Show Blendr output',
+  component: 'switch',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: true,
+  show: function(item) {
+    return item.blend.showSuccessMsg
+  }
+}
+
+var customSuccessMsg = {
+  type: 'string',
+  ref: 'blend.customSuccessMsg',
+  label: 'Success message',
+  defaultValue: 'Blend run successfully!',
+  expression: 'optional',
+  show: function(item) {
+    return item.blend.showSuccessMsg && !item.blend.showSuccessMsgOutput
+  }
+}
+
+var customErrorMsg = {
+  type: 'string',
+  ref: 'blend.customErrorMsg',
+  label: 'Error message',
+  defaultValue: 'There was an error running your blend',
+  expression: 'optional',
+  show: function(item) {
+    return item.blend.showSuccessMsg && !item.blend.showSuccessMsgOutput
+  }
+}
+
+var notification = {
+  grouped: true,
+  type: 'items',
+  translation: 'Notification',
+  items: {
+    successMessageShow: successMessageShow,
+    successMessageShowOutput: successMessageShowOutput,
+    customSuccessMsg: customSuccessMsg,
+    customErrorMsg: customErrorMsg
+  }
+}
+
+var buttonHeightAuto = {
+  ref: 'blend.buttonHeightAuto',
+  type: 'boolean',
+  translation: 'Auto button height',
+  component: 'switch',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: true,
+  show: function(item) {
+    return !item.blendDialog.show && item.items.length === 0
+  }
+}
+
+var buttonHeight = {
+  type: "number",
+  component: "slider",
+  label: "Button height",
+  ref: "blend.buttonHeight",
+  min: 10,
+  max: 100,
+  step: 1,
+  defaultValue: 100,
+  show: function(item) {
+    return !item.blend.buttonHeightAuto && !item.blendDialog.show && item.items.length === 0
+  }
+}
+
+var buttonWidthAuto = {
+  ref: 'blend.buttonWidthAuto',
+  type: 'boolean',
+  translation: 'Auto button width',
+  component: 'switch',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: true,
+  show: function(item) {
+    return !item.blendDialog.show && item.items.length === 0
+  }
+}
+
+
+
 var button = {
   grouped: true,
   type: 'items',
@@ -668,6 +860,9 @@ var button = {
   items: {
     buttonLabel: buttonLabel,
     runningBlendLabel: runningBlendLabel,
+    buttonHeightAuto: buttonHeightAuto,
+    buttonHeight: buttonHeight,
+    buttonWidthAuto: buttonWidthAuto,
     buttonWidth: buttonWidth,
     buttonAlignment: buttonAlignment,
     buttonUseIcon: buttonUseIcon,
@@ -675,13 +870,6 @@ var button = {
     buttonIconPosition: buttonIconPosition
   }
 }
-
-
-
-
-
-
-
 
 export default {
   definition: {
@@ -706,6 +894,7 @@ export default {
           general: general,
           button: button,
           dialog: dialog,
+          notification: notification,
           theme: theme
         }
       },

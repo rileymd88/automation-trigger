@@ -8,11 +8,27 @@ import { useSelector, useDispatch } from 'react-redux';
 
 export default function DialogButton({dialog}) {
   const dispatch = useDispatch();
+  console.log(dialog)
+  let height
+  let width
+  if(dialog.heightAuto) {
+    height = 'auto'
+  }
+  else {
+    height = `${dialog.height}%`
+  }
+  if(dialog.widthAuto) {
+    width = 'auto'
+  }
+  else {
+    width = `${dialog.buttonWidth}%`
+  }
+  
   const useStyles = makeStyles((theme) => ({
     button: {
-      width: `${dialog.buttonWidth}%`,
+      width: width,
       alignSelf: dialog.alignment,
-      height: 'auto'
+      height: height
     }
   }));
   const classes = useStyles();

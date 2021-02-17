@@ -4,6 +4,7 @@ import Components from "./components/Components";
 import CustomButton from "./components/CustomButton";
 import CustomDialog from './components/CustomDialog';
 import DialogButton from './components/DialogButton';
+import Notification from './components/Notification';
 import { Provider } from "react-redux";
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -20,6 +21,9 @@ export function render(element, items, blendGlobalTheme, blend, refs, getData, r
       },
       secondary: {
         main: blendGlobalTheme.secondaryColor.color,
+      },
+      success: {
+        main: blendGlobalTheme.primaryColor.color
       },
       text: {
         primary: 'rgba(0, 0, 0, 0.87)'
@@ -55,13 +59,25 @@ const store = configureStore({
   },
 });
 
+let notification
+if(blend.showSuccessMsg) {
+  notification = <Notification></Notification>
+}
+
   ReactDOM.render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         {finalDialog}
-      <Grid container flexDirection='column' height='100%'>
+      <Grid 
+        container
+        wrap={'nowrap'}
+        justifyContent={items.length === 0 || dialog.show ? 'center' : 'flex-start'}
+        flexDirection='column' 
+        height='100%'
+        >
         {finalFormItems}
         {button}
+        {notification}
       </Grid>
       </ThemeProvider>
     </Provider>,
