@@ -27,19 +27,30 @@ function get(endpoint) {
   })
 }
 
-function post(endpoint, body) {
+function post(endpoint, executionToken, body) {
   return new Promise(async function (resolve, reject) {
     try {
-      const headers = {
-        'X-App-Id': blendr.appId,
-        'X-Api-Key': blendr.apiKey
+      let headers
+      let url
+      if (blendr.useApis) {
+        headers = {
+          'X-App-Id': blendr.appId,
+          'X-Api-Key': blendr.apiKey
+        }
+        url = `${blendr.baseUrl}/${endpoint.replace('account_externalid', blendr.accountId)}`
+      }
+      else {
+        headers = {
+          'X-Execution-Token': executionToken
+        }
+        url = endpoint
       }
       const options = {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(body)
       }
-      const url = `${blendr.baseUrl}/${endpoint.replace('account_externalid', blendr.accountId)}`
+      
       const response = await fetch(url, options)
       if (response.status === 200) {
         resolve(await response.json())
@@ -62,13 +73,19 @@ export const getBlends = async () => {
   })
 }
 
-export const executeBlend = (blendId, data) => {
-  return new Promise(async function(resolve,reject){
+export const executeBlend = (blendId, blendExecutionToken, data) => {
+  return new Promise(async function (resolve, reject) {
     try {
-      const response = await post(`accounts/account_externalid/blends/${blendId}/run`, data)
-      resolve(response)
+      if (blendr.useApis) {
+        const response = await post(`accounts/account_externalid/blends/${blendId}/run`,blendExecutionToken, data)
+        resolve(response)
+      }
+      else {
+        const response = await post(blendId,blendExecutionToken, data)
+        resolve(response)
+      }
     }
-    catch(err) {
+    catch (err) {
       resolve(err)
       reject(err)
     }

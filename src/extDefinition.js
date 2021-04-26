@@ -1,5 +1,6 @@
 import { getBlends } from './services/backend'
 import luiIcons from './utils/lui-icons';
+import blendr from './services/blendr'
 
 var component = {
   label: 'Item type',
@@ -24,7 +25,7 @@ const types = {
   dropdown: 'string'
 }
 
-const stringComponents = ['dropdown','dropdownMultiple', 'textInput']
+const stringComponents = ['dropdown', 'dropdownMultiple', 'textInput']
 const numberComponents = ['numberInput', 'slider', 'switch', 'checkbox']
 const booleanComponents = ['switch', 'checkbox']
 
@@ -34,7 +35,7 @@ var defaultValueString = {
   label: 'Default value',
   defaultValue: '',
   expression: 'optional',
-  show: function(item) {
+  show: function (item) {
     return stringComponents.includes(item.component)
   }
 }
@@ -45,7 +46,7 @@ var defaultValueNumber = {
   label: 'Default value',
   defaultValue: 1,
   expression: 'optional',
-  show: function(item) {
+  show: function (item) {
     return numberComponents.includes(item.component)
   }
 }
@@ -146,7 +147,7 @@ var ref = {
   type: 'string',
   ref: 'ref',
   label: 'Reference',
-  defaultValue: function() {
+  defaultValue: function () {
     return Math.random().toString(36).substr(2, 5);
   },
   expression: 'optional'
@@ -173,14 +174,14 @@ var required = {
     },
   ],
   defaultValue: false,
-  show: function(item) {
-    if(item.component !== 'switch' && item.component !== 'checkbox') {
+  show: function (item) {
+    if (item.component !== 'switch' && item.component !== 'checkbox') {
       return true
     }
     else {
       return false
     }
-}
+  }
 }
 
 var alignment = {
@@ -265,8 +266,33 @@ var blends = {
   type: 'string',
   ref: 'blend.id',
   defaultValue: '',
-  options: function() {
+  options: function () {
     return getBlends()
+  },
+  show: function () {
+    return blendr.useApis
+  }
+}
+
+var blendUrl = {
+  type: 'string',
+  ref: 'blend.id',
+  label: 'Blendr POST webhook URL',
+  defaultValue: '',
+  expression: 'optional',
+  show: function () {
+    return !blendr.useApis
+  }
+}
+
+var blendExecutionToken = {
+  type: 'string',
+  ref: 'blend.executionToken',
+  label: 'Blendr execution token',
+  defaultValue: '',
+  expression: 'optional',
+  show: function () {
+    return !blendr.useApis
   }
 }
 
@@ -295,7 +321,7 @@ var buttonWidth = {
   max: 100,
   step: 1,
   defaultValue: 100,
-  show: function(item) {
+  show: function (item) {
     return !item.blendDialog.show && !item.blend.buttonWidthAuto
   }
 }
@@ -330,7 +356,7 @@ var buttonAlignment = {
       labelPlacement: 'bottom',
     },
   ],
-  show: function(item) {
+  show: function (item) {
     return !item.blendDialog.show
   }
 }
@@ -367,6 +393,8 @@ var blend = {
   component: "items",
   items: {
     blends: blends,
+    blendUrl: blendUrl,
+    blendExecutionToken: blendExecutionToken,
     useCondition: useCondition,
     condition: condition
   }
@@ -462,7 +490,7 @@ var buttonIconType = {
   defaultValue: '',
   options: luiIcons,
   expressionType: 'StringExpression',
-  show: function(data) {
+  show: function (data) {
     return data.blend.icon.useIcon
   }
 }
@@ -480,7 +508,7 @@ var buttonIconPosition = {
       value: 'right',
     },
   ],
-  show: function(data) {
+  show: function (data) {
     return data.blend.icon.useIcon
   }
 }
@@ -517,7 +545,7 @@ var dialogWidth = {
     { value: 'lg', label: 'Large' },
     { value: 'xl', label: 'Extra large' },
   ],
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show
   }
 }
@@ -528,7 +556,7 @@ var dialogTitle = {
   label: 'Dialog title',
   defaultValue: 'Dialog title',
   expression: 'optional',
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show
   }
 }
@@ -539,7 +567,7 @@ var dialogButtonLabel = {
   label: 'Button label',
   defaultValue: 'Open dialog',
   expression: 'optional',
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show
   }
 }
@@ -560,7 +588,7 @@ var dialogUseIcon = {
     },
   ],
   defaultValue: false,
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show
   }
 }
@@ -572,7 +600,7 @@ var dialogIconType = {
   defaultValue: '',
   options: luiIcons,
   expressionType: 'StringExpression',
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show && item.blendDialog.icon.useIcon
   }
 }
@@ -590,7 +618,7 @@ var dialogIconPosition = {
       value: 'right',
     },
   ],
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show && item.blendDialog.icon.useIcon
   }
 }
@@ -625,7 +653,7 @@ var dialogAlignment = {
       labelPlacement: 'bottom',
     },
   ],
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show
   }
 }
@@ -646,7 +674,7 @@ var dialogButtonWidthAuto = {
     },
   ],
   defaultValue: true,
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show
   }
 }
@@ -660,7 +688,7 @@ var dialogButtonWidth = {
   max: 100,
   step: 1,
   defaultValue: 100,
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show && !item.blendDialog.buttonWidthAuto
   }
 }
@@ -681,7 +709,7 @@ var dialogButtonHeightAuto = {
     },
   ],
   defaultValue: true,
-  show: function(item) {
+  show: function (item) {
     return item.blendDialog.show
   }
 }
@@ -695,7 +723,7 @@ var dialogButtonHeight = {
   max: 100,
   step: 1,
   defaultValue: 100,
-  show: function(item) {
+  show: function (item) {
     return !item.blendDialog.buttonHeightAuto && item.blendDialog.show
   }
 }
@@ -756,7 +784,7 @@ var successMessageShowOutput = {
     },
   ],
   defaultValue: true,
-  show: function(item) {
+  show: function (item) {
     return item.blend.showSuccessMsg
   }
 }
@@ -767,7 +795,7 @@ var customSuccessMsg = {
   label: 'Success message',
   defaultValue: 'Blend run successfully!',
   expression: 'optional',
-  show: function(item) {
+  show: function (item) {
     return item.blend.showSuccessMsg && !item.blend.showSuccessMsgOutput
   }
 }
@@ -778,7 +806,7 @@ var customErrorMsg = {
   label: 'Error message',
   defaultValue: 'There was an error running your blend',
   expression: 'optional',
-  show: function(item) {
+  show: function (item) {
     return item.blend.showSuccessMsg && !item.blend.showSuccessMsgOutput
   }
 }
@@ -811,7 +839,7 @@ var buttonHeightAuto = {
     },
   ],
   defaultValue: true,
-  show: function(item) {
+  show: function (item) {
     return !item.blendDialog.show && item.items.length === 0
   }
 }
@@ -825,7 +853,7 @@ var buttonHeight = {
   max: 100,
   step: 1,
   defaultValue: 100,
-  show: function(item) {
+  show: function (item) {
     return !item.blend.buttonHeightAuto && !item.blendDialog.show && item.items.length === 0
   }
 }
@@ -846,7 +874,7 @@ var buttonWidthAuto = {
     },
   ],
   defaultValue: true,
-  show: function(item) {
+  show: function (item) {
     return !item.blendDialog.show && item.items.length === 0
   }
 }

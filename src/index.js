@@ -28,6 +28,7 @@ export default function supernova() {
         const requiredItems = layout.items.filter(i => i.required).map(i=>i.ref)
         const dialog = {
             id: layout.blend.id,
+            executionToken: layout.blend.executionToken,
             show: layout.blendDialog.show,
             buttonWidth: layout.blendDialog.buttonWidth,
             buttonLabel: layout.blendDialog.buttonLabel,

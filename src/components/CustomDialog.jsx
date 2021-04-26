@@ -47,7 +47,7 @@ export default function CustomDialog({dialog, customButton}) {
           delete clone[key]
         }
       }
-      await executeBlend(dialog.id, {form: clone, data: dialog.getData()})
+      await executeBlend(dialog.id, dialog.executionToken, {form: clone, data: dialog.getData()})
       setLoading(false)
       dispatch(setDialog(false))
     }

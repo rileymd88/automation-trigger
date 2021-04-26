@@ -55,11 +55,16 @@ export default function CustomButton({blend, refs, getData, requiredItems, dialo
             delete clone[key]
           }
         }
-        const msg = await executeBlend(blend.id, {form: clone, data: getData()})
+        const msg = await executeBlend(blend.id, blend.executionToken, {form: clone, data: getData()})
+        console.log(blend.showSuccessMsg)
         if(blend.showSuccessMsg) {
+          console.log('show msg')
           dispatch(setSeverity('success'))
           if(blend.showSuccessMsgOutput) {
-            dispatch(setMessage(msg))
+            console.log('show this msg')
+            if(typeof msg !== 'undefined') {
+              dispatch(setMessage(msg))
+            }
           }
           else {
             dispatch(setMessage(blend.customSuccessMsg))
@@ -69,10 +74,13 @@ export default function CustomButton({blend, refs, getData, requiredItems, dialo
         setLoading(false)
       }
       catch(err) {
+        console.log('err', err)
         if(blend.showSuccessMsg) {
           dispatch(setSeverity('warning'))
           if(blend.showSuccessMsgOutput) {
-            dispatch(setMessage(msg))
+            if(typeof msg !== 'undefined') {
+              dispatch(setMessage(msg))
+            }
           }
           else {
             dispatch(setMessage(blend.customErrorMsg))
