@@ -1,6 +1,11 @@
 # Qlik Blends
-Qlik blends is an extension which allows you to trigger Blends from Blendr.io directly from Qlik Sense
-
+Qlik blends is an extension which allows you to trigger Blends from Blendr.io directly from Qlik Sense.
+* Dialog
+![blend27](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend27.PNG)
+* Within extension
+![blend28](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend28.PNG)
+* Simple button
+![blend29](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend29.PNG)
 # Installation steps:
 1. Download the latest release from the following link: https://github.com/rileymd88/qlik-blends/files/6378232/qlik-blends.zip 
 2. Import into Qlik Sense using the management console
