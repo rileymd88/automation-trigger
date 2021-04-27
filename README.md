@@ -77,7 +77,7 @@ Qlik blends is an extension which allows you to trigger Blends from Blendr.io di
 23. Now when you run the Blend from Qlik Sense you should see a short message which details some of the data sent to the Blend
 ![blend25](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend26.PNG)
 
-### Developing the extension
+# Developing the extension
 1. Clone the repository
 2. Run `npm i`
 3. Run `npm run build`
