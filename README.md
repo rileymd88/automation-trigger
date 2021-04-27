@@ -6,17 +6,18 @@ Qlik blends is an extension which allows you to trigger Blends from Blendr.io di
 2. Import into Qlik Sense using the management console
 
 # Using the extension
-**Dimensions & measures**
+### Dimensions & measures
 * Any data added as dimensions and measures will be sent to the Blend within the body of the webhook
 
-**Form**
-* You can click on add items to add a form item to the extension. You will then be prompted to choose the type and set some appearance settings. Each item will save data which will also be sent to the Blend within the body of the webhook. The `Reference` field will be used as a JSON key in the data which gets sent to the body of the webhook so either remember the generated id or change it to something you can remember. ** Ensure that the reference string does NOT contain any spaces or strange characters ** 
+### Form
+* You can click on add items to add a form item to the extension. You will then be prompted to choose the type and set some appearance settings. Each item will save data which will also be sent to the Blend within the body of the webhook. The `Reference` field will be used as a JSON key in the data which gets sent to the body of the webhook so either remember the generated id or change it to something you can remember. 
+**Ensure that the reference string does NOT contain any spaces or strange characters** 
 
-**Blend**
+### Blend
 * Here you can enter the details of which Blend should be triggered. You can find this correct URL and execution token by going to your Blend editor, clicking on start and under Inputs change the Run Mode to Triggered.
-** Ensure that you use the POST URL and NOT the GET URL **
+**Ensure that you use the POST URL and NOT the GET URL**
 
-**Example usage with a Blend** 
+### Example usage with a Blend 
 1. Create an empty Blend by clicking on Add new Blend and then Start from blank
 ![blend1](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend1.PNG)
 ![blend2](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend2.PNG)  
