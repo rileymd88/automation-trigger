@@ -10,6 +10,9 @@ Qlik blends is an extension which allows you to trigger Blends from Blendr.io di
 1. Download the latest release from the following link: https://github.com/rileymd88/qlik-blends/files/6378232/qlik-blends.zip 
 2. Import into Qlik Sense using the management console
 3. If using Qlik Sense SaaS, you will need to add a content security policy with the following details:
+- Name: Blendr API
+- Orgin: api.blendr.io
+- Directive: connect-src
 * ![blend30](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend30.PNG)
 
 # Using the extension
