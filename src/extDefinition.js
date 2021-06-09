@@ -854,7 +854,7 @@ var buttonHeight = {
   step: 1,
   defaultValue: 100,
   show: function (item) {
-    return !item.blend.buttonHeightAuto && !item.blendDialog.show && item.items.length === 0
+    return !item.blend.buttonHeightAuto && !item.blendDialog.show
   }
 }
 
@@ -875,7 +875,7 @@ var buttonWidthAuto = {
   ],
   defaultValue: true,
   show: function (item) {
-    return !item.blendDialog.show && item.items.length === 0
+    return !item.blendDialog.show
   }
 }
 
