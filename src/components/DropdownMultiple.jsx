@@ -26,7 +26,6 @@ export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
     }
     dispatch(setItem(payload))
     value = block.defaultValueString.split(',')
-    
   }
   else {
       value = tmpValue
@@ -46,7 +45,7 @@ export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
     <Autocomplete
       multiple
       forcePopupIcon={false}
-      value={value[0] === "" ? "" : value}
+      value={value}
       variant={blendGlobalTheme.variant}
       options={options.length > 1 ? options: []}
       className={classes.dropdown}
