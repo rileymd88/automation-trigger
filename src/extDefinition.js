@@ -840,7 +840,7 @@ var buttonHeightAuto = {
   ],
   defaultValue: true,
   show: function (item) {
-    return !item.blendDialog.show && item.items.length === 0
+    return !item.blendDialog.show
   }
 }
 
