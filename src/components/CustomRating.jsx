@@ -1,16 +1,17 @@
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import TextField from '@mui/material/TextField';
-import { setItem, selectAllItems, selectItem } from '../states/formsSlice'
+import Typography from '@mui/material/Typography';
+import Rating from '@mui/material/Rating';
+import { setItem, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 
 
 
-export default function NumberInput({block, blendGlobalTheme, blend}) {
+export default function Custom({ block, globalTheme, blend }) {
   const dispatch = useDispatch();
   let value
   const tmpValue = useSelector(state => selectItem(state, block.ref))
-  if(tmpValue === 'undefined') {
+  if (tmpValue === 'undefined') {
     const payload = {
       ref: block.ref,
       data: block.defaultValueNumber
@@ -22,15 +23,16 @@ export default function NumberInput({block, blendGlobalTheme, blend}) {
     value = tmpValue
   }
   const useStyles = makeStyles((theme) => ({
-    numberField: {
+    slider: {
       width: `${block.width}%`,
       marginBottom: 12,
       alignSelf: block.alignment
     }
   }));
+
   const classes = useStyles();
 
-  const onNumberChange = (e) => {
+  const onRatingChange = (e) => {
     const payload = {
       ref: block.ref,
       data: e.target.value
@@ -39,12 +41,17 @@ export default function NumberInput({block, blendGlobalTheme, blend}) {
   };
 
   return (
-      <TextField
-        variant={blendGlobalTheme.variant}
+    <div>
+      <Typography id="discrete-rating" gutterBottom>
+        {block.label}
+      </Typography>
+      <Rating
         value={value}
-        className={classes.numberField}
-        label={block.label}
-        onChange={onNumberChange}
-        type="number" />
+        onChange={onRatingChange}
+        size={block.ratingSize}
+        precision={block.precision}
+        max={block.maxRating}
+      />
+    </div>
   );
 }

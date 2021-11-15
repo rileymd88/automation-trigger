@@ -1,11 +1,9 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import makeStyles from '@mui/styles/makeStyles';
 import { setItem, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/core/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 export default function Dropdown({block, blendGlobalTheme, blend}) {
   const dispatch = useDispatch();

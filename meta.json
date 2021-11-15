@@ -1,8 +1,8 @@
 {
-	"name": "qlik-blends",
-	"icon": "cloud",
+	"name": "Automation trigger",
+	"icon": "code",
   "version": "1.0.0",
-	"description": "Qlik blends",
+	"description": "Automation trigger for Qlik Sense",
   "author": "Riley MacDonald",
   "type": "visualization"
 }

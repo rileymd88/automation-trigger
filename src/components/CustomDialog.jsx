@@ -1,15 +1,13 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import LoadingButton from '@material-ui/lab/LoadingButton';
-import Paper from '@material-ui/core/Paper';
+import makeStyles from '@mui/styles/makeStyles';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
-import { executeBlend } from '../services/backend'
-import { selectAllItems, selectItem, setDialog, selectDialog } from '../states/formsSlice'
+import { selectAllItems, setDialog, selectDialog } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 
 function PaperComponent(props) {
@@ -37,26 +35,6 @@ export default function CustomDialog({dialog, customButton}) {
   const onClose = (e) => {
     dispatch(setDialog(false))
   };
-
-  const onSave = async (e)  => {
-    try {
-      setLoading(true)
-      let clone = {...items}
-      for(const key in clone) {
-        if(!dialog.refs.includes(key)) {
-          delete clone[key]
-        }
-      }
-      await executeBlend(dialog.id, dialog.executionToken, {form: clone, data: dialog.getData()})
-      setLoading(false)
-      dispatch(setDialog(false))
-    }
-    catch(err) {
-      setLoading(false)
-      console.error(err)
-      dispatch(setDialog(false))
-    }
-  }
 
   return (
     <Dialog

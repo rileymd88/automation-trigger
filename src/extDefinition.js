@@ -1,6 +1,5 @@
-import { getBlends } from './services/backend'
+import { getAutomations, getBaseUrl } from './services/backend'
 import luiIcons from './utils/lui-icons';
-import blendr from './services/blendr'
 
 var component = {
   label: 'Item type',
@@ -11,9 +10,11 @@ var component = {
   defaultValue: '',
   options: [
     { value: 'checkbox', label: 'Checkbox' },
+    { value: 'datePicker', label: 'Date picker' },
     { value: 'dropdown', label: 'Dropdown' },
     { value: 'dropdownMultiple', label: 'Dropdown multiple select' },
     { value: 'numberInput', label: 'Number' },
+    { value: 'rating', label: 'Rating' },
     { value: 'slider', label: 'Slider' },
     { value: 'switch', label: 'Switch' },
     { value: 'textInput', label: 'Text' },
@@ -26,7 +27,8 @@ const types = {
 }
 
 const stringComponents = ['dropdown', 'dropdownMultiple', 'textInput']
-const numberComponents = ['numberInput', 'slider', 'switch', 'checkbox']
+const numberComponents = ['numberInput', 'slider', 'switch', 'checkbox', 'rating']
+const dateComponents = ['datePicker']
 const booleanComponents = ['switch', 'checkbox']
 
 var defaultValueString = {
@@ -44,10 +46,44 @@ var defaultValueNumber = {
   type: 'number',
   ref: 'defaultValueNumber',
   label: 'Default value',
-  defaultValue: 1,
+  defaultValue: '1',
   expression: 'optional',
   show: function (item) {
     return numberComponents.includes(item.component)
+  }
+}
+
+var defaultValueDate = {
+  type: 'number',
+  ref: 'defaultValueDate',
+  label: 'Default value',
+  defaultValue: '=Today()',
+  expression: 'always',
+  show: function (item) {
+    return dateComponents.includes(item.component)
+  }
+}
+
+var dateFormat = {
+  label: 'Date format',
+  component: 'expression-with-dropdown',
+  dropdownOnly: true,
+  type: 'string',
+  ref: 'dateFormat',
+  defaultValue: 'yyyy/MM/dd|____/__/__',
+  options: [
+    { value: 'yyyy-MM-dd|____-__-__', label: 'YYYY-MM-DD' },
+    { value: 'yyyy.MM.dd|____.__.__', label: 'YYYY.MM.DD' },
+    { value: 'yyyy/MM/dd|____/__/__', label: 'YYYY/MM/dd' },
+    { value: 'dd-MM-yyyy|__-__-____', label: 'DD-MM-YYYY' },
+    { value: 'dd.MM.yyyy|__.__.____', label: 'DD.MM.YYYY' },
+    { value: 'dd/MM/yyyy|__/__/____', label: 'DD/MM/YYYY' },
+    { value: 'MM-dd-yyyy|__-__-____', label: 'MM-DD-YYYY' },
+    { value: 'MM.dd.yyyy|__.__.____', label: 'MM.DD.YYYY' },
+    { value: 'MM/dd/yyyy|__/__/____', label: 'MM/DD/YYYY' },
+  ],
+  show: function (item) {
+    return dateComponents.includes(item.component)
   }
 }
 
@@ -124,6 +160,45 @@ var max = {
   }
 }
 
+var precision = {
+  type: 'number',
+  ref: 'precision',
+  label: 'Rating precision',
+  defaultValue: 0.5,
+  expression: 'optional',
+  show: function (item) {
+    if (item.component === 'rating') { return true; }
+  }
+}
+
+var maxRating = {
+  type: 'number',
+  ref: 'maxRating',
+  label: 'Number of stars',
+  defaultValue: 5,
+  expression: 'optional',
+  show: function (item) {
+    if (item.component === 'rating') { return true; }
+  }
+}
+
+var ratingSize = {
+  label: 'Rating size',
+  component: 'expression-with-dropdown',
+  dropdownOnly: true,
+  type: 'string',
+  ref: 'ratingSize',
+  defaultValue: 'medium',
+  options: [
+    { value: 'small', label: 'Small' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'large', label: 'Large' },
+  ],
+  show: function (item) {
+    if (item.component === 'rating') { return true; }
+  }
+}
+
 var dropdownOptions = {
   type: 'string',
   ref: 'dropdownOptions',
@@ -154,8 +229,15 @@ var ref = {
 }
 
 var explainRef = {
-  label: `The reference is used as a key when sending the data to your blend`,
+  label: `The reference is used as a key when sending the data to your automation`,
   component: 'text'
+}
+
+var automationLink = {
+  label: "Automation link",
+  component: "link",
+  url: function (layout) { return `${getBaseUrl()}/automations/${layout.blend.id}/editor`},
+  show: function (layout) { return layout.blend.id.length > 1 }
 }
 
 var required = {
@@ -241,9 +323,14 @@ var config = {
             component: component,
             defaultValueString: defaultValueString,
             defaultValueNumber: defaultValueNumber,
+            defaultValueDate: defaultValueDate,
+            dateFormat: dateFormat,
             step: step,
             min: min,
             max: max,
+            precision: precision,
+            maxRating: maxRating,
+            ratingSize: ratingSize,
             dropdownOptions: dropdownOptions,
             explainDropdown: explainDropdown,
             width: width,
@@ -260,21 +347,18 @@ var config = {
 };
 
 var blends = {
-  label: 'Select a blend',
+  label: 'Select an automation',
   component: 'expression-with-dropdown',
   dropdownOnly: true,
   type: 'string',
   ref: 'blend.id',
   defaultValue: '',
   options: function () {
-    return getBlends()
-  },
-  show: function () {
-    return blendr.useApis
+    return getAutomations()
   }
 }
 
-var blendUrl = {
+/* var blendUrl = {
   type: 'string',
   ref: 'blend.id',
   label: 'Blendr POST webhook URL',
@@ -283,7 +367,7 @@ var blendUrl = {
   show: function () {
     return !blendr.useApis
   }
-}
+} */
 
 var blendExecutionToken = {
   type: 'string',
@@ -292,7 +376,7 @@ var blendExecutionToken = {
   defaultValue: '',
   expression: 'optional',
   show: function () {
-    return !blendr.useApis
+    return false
   }
 }
 
@@ -300,7 +384,7 @@ var buttonLabel = {
   type: 'string',
   ref: 'blend.buttonLabel',
   label: 'Button label',
-  defaultValue: 'Run blend',
+  defaultValue: 'Run automation',
   expression: 'optional'
 }
 
@@ -308,7 +392,7 @@ var runningBlendLabel = {
   type: 'string',
   ref: 'blend.runningBlendLabel',
   label: 'Loading message',
-  defaultValue: 'Running blend...',
+  defaultValue: 'Running automation...',
   expression: 'optional'
 }
 
@@ -364,7 +448,7 @@ var buttonAlignment = {
 var useCondition = {
   type: 'boolean',
   component: 'switch',
-  translation: 'Condition to enable blend',
+  translation: 'Condition to enable automation',
   ref: 'blend.useEnabledCondition',
   defaultValue: false,
   options: [
@@ -387,14 +471,22 @@ var condition = {
   show: (data) => data.blend.useEnabledCondition,
 }
 
+var sendSelections = {
+  type: 'boolean',
+  ref: 'blend.sendSelections',
+  translation: 'Object.ActionButton.Automation.SendSelections',
+  defaultValue: false,
+}
+
 var blend = {
   type: "items",
-  label: "Blend",
+  label: "Automation",
   component: "items",
   items: {
     blends: blends,
-    blendUrl: blendUrl,
     blendExecutionToken: blendExecutionToken,
+    automationLink: automationLink,
+    sendSelections: sendSelections,
     useCondition: useCondition,
     condition: condition
   }
@@ -454,6 +546,18 @@ var colorPickerSecondary = {
   }
 }
 
+var colorPickerFont = {
+  component: 'color-picker',
+  type: 'object',
+  ref: 'blendGlobalTheme.fontColor',
+  translation: 'Font color',
+  dualOutput: true,
+  defaultValue: {
+    color: "#FFFFFF",
+    index: "-1"
+  }
+}
+
 var theme = {
   grouped: true,
   type: 'items',
@@ -461,6 +565,7 @@ var theme = {
   items: {
     colorPickerPrimary: colorPickerPrimary,
     colorPickerSecondary: colorPickerSecondary,
+    colorPickerFont: colorPickerFont,
     variant: variant
   }
 }
@@ -771,7 +876,7 @@ var successMessageShow = {
 var successMessageShowOutput = {
   ref: 'blend.showSuccessMsgOutput',
   type: 'boolean',
-  translation: 'Show Blendr output',
+  translation: 'Show automation output',
   component: 'switch',
   options: [
     {
@@ -793,7 +898,7 @@ var customSuccessMsg = {
   type: 'string',
   ref: 'blend.customSuccessMsg',
   label: 'Success message',
-  defaultValue: 'Blend run successfully!',
+  defaultValue: 'Automation run successfully!',
   expression: 'optional',
   show: function (item) {
     return item.blend.showSuccessMsg && !item.blend.showSuccessMsgOutput
@@ -804,7 +909,7 @@ var customErrorMsg = {
   type: 'string',
   ref: 'blend.customErrorMsg',
   label: 'Error message',
-  defaultValue: 'There was an error running your blend',
+  defaultValue: 'There was an error running your automation',
   expression: 'optional',
   show: function (item) {
     return item.blend.showSuccessMsg && !item.blend.showSuccessMsgOutput
@@ -884,7 +989,7 @@ var buttonWidthAuto = {
 var button = {
   grouped: true,
   type: 'items',
-  translation: 'Run blend button',
+  translation: 'Run automation button',
   items: {
     buttonLabel: buttonLabel,
     runningBlendLabel: runningBlendLabel,
@@ -915,8 +1020,10 @@ export default {
         max: 20
       },
       config: config,
-      blend: blend,
+      automation: blend,
       settings: {
+        component: 'expandable-items',
+        translation: 'Common.Appearance',
         uses: 'settings',
         items: {
           general: general,
@@ -929,9 +1036,9 @@ export default {
     },
   },
   support: {
-    export: true,
-    exportData: true,
-    snapshot: true,
-    viewData: true,
+    export: false,
+    exportData: false,
+    snapshot: false,
+    viewData: false,
   },
 };

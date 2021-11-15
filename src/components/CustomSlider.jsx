@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from '@mui/material/Typography';
+import Slider from '@mui/material/Slider';
 import { setItem, selectAllItems, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -40,7 +40,7 @@ export default function CustomSlider({block, globalTheme, blend}) {
   };
 
   return (
-    <div>
+  <div>
     <Typography id="discrete-slider" gutterBottom>
     {block.label}
   </Typography>

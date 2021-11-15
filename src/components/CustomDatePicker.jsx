@@ -1,37 +1,44 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import { setItem, selectAllItems, selectItem } from '../states/formsSlice'
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
+import { setItem, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
-import { DatePicker } from '@material-ui/lab';
-import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
-import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import { DatePicker } from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { format } from 'date-fns'
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
+const convertNumberDate = (numberData) => {
+  const hours = Math.floor((numberData % 1) * 24);
+  const minutes = Math.floor((((numberData % 1) * 24) - hours) * 60)
+  return new Date(Date.UTC(0, 0, numberData, hours - 17, minutes));
+}
 
-
-export default function CustomDatePicker({block, blendGlobalTheme, blend}) {
+export default function CustomDatePicker({ block, blendGlobalTheme, blend }) {
+  const useStyles = makeStyles((theme) => ({
+    datePicker: {
+      width: `${block.width}%`,
+      marginBottom: 12,
+      alignSelf: block.alignment
+    },
+  }));
+  const classes = useStyles();
   const dispatch = useDispatch();
   let date
   const tmpDate = useSelector(state => selectItem(state, block.ref))
-  if(tmpDate === 'undefined') {
+  if (tmpDate === 'undefined') {
     const payload = {
       ref: block.ref,
-      data: block.defaultValue
+      data: convertNumberDate(block.defaultValueDate)
     }
     dispatch(setItem(payload))
-    date = block.defaultValue
+    date = convertNumberDate(block.defaultValueDate)
   }
   else {
     date = tmpDate
   }
-  
-  const useStyles = makeStyles((theme) => ({
-    textField: {
-      width: `${block.width}%`,
-      marginBottom: 12
-    }
-  }));
-  const classes = useStyles();
+
+
 
   const onDateChange = (newValue) => {
     const payload = {
@@ -42,15 +49,16 @@ export default function CustomDatePicker({block, blendGlobalTheme, blend}) {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <DatePicker
-      value={null}
-      label={block.label}
-      onChange={(newValue) => {
-        setValue(newValue);
-      }}
-      renderInput={(params) => <TextField {...params} variant={blendGlobalTheme.variant} />}
-    />
-  </LocalizationProvider>
+    <LocalizationProvider className={classes.datePicker} dateAdapter={AdapterDateFns}>
+      <DatePicker
+        onChange={onDateChange}
+        mask={block.dateFormat.split('|')[1]}
+        inputFormat={block.dateFormat.split('|')[0]}
+        className={classes.datePicker}
+        value={date}
+        label={block.label}
+        renderInput={(params) => <TextField {...params} className={classes.datePicker} variant={blendGlobalTheme.variant} />}
+      />
+    </LocalizationProvider>
   );
 }

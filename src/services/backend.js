@@ -1,17 +1,18 @@
-import blendr from './blendr'
+const baseUrl = window.location.href.split('qlikcloud.com')[0] + 'qlikcloud.com'
+const appId = window.location.href.split('qlikcloud.com/sense/app/')[1].split('/')[0]
+const sheetId = window.location.href.split('qlikcloud.com/sense/app/')[1].split('/')[2]
 
 function get(endpoint) {
   return new Promise(async function (resolve, reject) {
     try {
       const headers = {
-        'X-App-Id': blendr.appId,
-        'X-Api-Key': blendr.apiKey
+        'Content-Type': 'application/json'
       }
       const options = {
         method: 'GET',
         headers: headers
       }
-      const url = `${blendr.baseUrl}/${endpoint.replace('account_externalid', blendr.accountId)}`
+      const url = `${baseUrl}/api/v1/${endpoint}`
       const response = await fetch(url, options)
       if (response.status === 200) {
         resolve(await response.json())
@@ -20,7 +21,7 @@ function get(endpoint) {
         reject(response.status)
       }
     }
-    catch {
+    catch (err) {
       reject(err)
       console.error(err)
     }
@@ -30,28 +31,15 @@ function get(endpoint) {
 function post(endpoint, executionToken, body) {
   return new Promise(async function (resolve, reject) {
     try {
-      let headers
-      let url
-      if (blendr.useApis) {
-        headers = {
-          'X-App-Id': blendr.appId,
-          'X-Api-Key': blendr.apiKey
-        }
-        url = `${blendr.baseUrl}/${endpoint.replace('account_externalid', blendr.accountId)}`
-      }
-      else {
-        headers = {
-          'X-Execution-Token': executionToken
-        }
-        url = endpoint
+      const headers = {
+        'X-Execution-Token': executionToken
       }
       const options = {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(body)
       }
-      
-      const response = await fetch(url, options)
+      const response = await fetch(`${baseUrl}/api/v1/${endpoint}`, options)
       if (response.status === 200) {
         resolve(await response.json())
       }
@@ -59,34 +47,95 @@ function post(endpoint, executionToken, body) {
         reject(response.status)
       }
     }
-    catch {
+    catch (err) {
       reject(err)
       console.error(err)
     }
   })
 }
 
-export const getBlends = async () => {
-  const blends = await get('accounts/account_externalid/blends')
-  return blends.data.map(function (b) {
-    return { value: b.guid, label: b.name }
+export const getBaseUrl = () => {
+  return baseUrl
+}
+
+export const getAppId = () => {
+  return appId
+}
+
+export const getSheetId = () => {
+  return sheetId
+}
+
+
+
+export const getAutomations = async () => {
+  const automations = await get('items?resourceType=automation')
+  return automations.data.map(function (a) {
+    return { value: a.resourceId, label: a.name }
   })
 }
 
-export const executeBlend = (blendId, blendExecutionToken, data) => {
+export const getAutomation = async (automationId) => {
+  return await get(`automations/${automationId}`)
+}
+
+export const executeAutomation = async (automationId, data, executionToken) => {
   return new Promise(async function (resolve, reject) {
     try {
-      if (blendr.useApis) {
-        const response = await post(`accounts/account_externalid/blends/${blendId}/run`,blendExecutionToken, data)
-        resolve(response)
-      }
-      else {
-        const response = await post(blendId,blendExecutionToken, data)
-        resolve(response)
-      }
+      const response = await post(`automations/${automationId}/actions/execute`, executionToken, data)
+      resolve(response)
     }
     catch (err) {
-      resolve(err)
+      reject(err)
+    }
+  })
+}
+
+export const applyExecutionToken = async (app, automationId, thisObjectId) => {
+  try {
+    const automation = await getAutomation(automationId)
+    const executionToken = automation.execution_token
+    const thisObject = await app.getObject(thisObjectId)
+    const patchParams = {
+      qSoftPatch: false,
+      qPatches: [{
+        qPath: '/blend/executionToken',
+        qOp: 'replace',
+        qValue: JSON.stringify(executionToken)
+      }]
+    }
+    await thisObject.applyPatches(patchParams)
+  }
+  catch (e) {
+    console.info('This user does not have access to modify to selected automation')
+  }
+}
+
+export const createBookmark = (app) => {
+  return new Promise(async function (resolve, reject) {
+    try {
+      const newDate = new Date();
+      const props = {
+        qProp: {
+          qInfo: {
+            qId: `automation_${app.id}_${newDate.getTime()}`,
+            qType: 'bookmark',
+          },
+          qMetaDef: {
+            title: `Generated automation bookmark on ${newDate.toISOString()}`,
+            description: 'Generated to provide target automation with bookmark to get current selection state',
+            _createdBy: 'automation-trigger',
+            _createdFor: 'automation',
+            _createdOn: `${newDate.toISOString()}`,
+            _id: `automation_${encodeURIComponent(app.id)}_${newDate.getTime()}`,
+          },
+        },
+      };
+      const bookmark = await app.createBookmark(props)
+      const layout = await bookmark.getLayout()
+      resolve(layout.qInfo.qId)
+    }
+    catch (err) {
       reject(err)
     }
   })

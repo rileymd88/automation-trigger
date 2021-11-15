@@ -6,24 +6,27 @@ import CustomDialog from './components/CustomDialog';
 import DialogButton from './components/DialogButton';
 import Notification from './components/Notification';
 import { Provider } from "react-redux";
-import Grid from '@material-ui/core/Grid';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Box from '@mui/material/Box';
+import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
 import { configureStore } from '@reduxjs/toolkit';
 import formsReducer from './states/formsSlice';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 export function render(element, items, blendGlobalTheme, blend, refs, getData, requiredItems, dialog) {
-  const theme = createMuiTheme({
+  const theme = createTheme(adaptV4Theme({
     palette: {
-      type: 'light',
+      mode: 'light',
       primary: {
         main: blendGlobalTheme.primaryColor.color,
-        contrastText: '#fff',
+        contrastText: blendGlobalTheme.fontColor.color,
       },
       secondary: {
         main: blendGlobalTheme.secondaryColor.color,
       },
       success: {
-        main: blendGlobalTheme.primaryColor.color
+        main: blendGlobalTheme.primaryColor.color,
+        contrastText: blendGlobalTheme.fontColor.color,
       },
       text: {
         primary: 'rgba(0, 0, 0, 0.87)'
@@ -31,17 +34,18 @@ export function render(element, items, blendGlobalTheme, blend, refs, getData, r
     },
     typography: {
       button: {
-        textTransform: 'none'
+        textTransform: 'none',
       },
       fontFamily: 'Source Sans Pro,sans-serif'
-    }
-  });
+    },
+  }));
+
   const formItems = items.map((item) => Components(item, blendGlobalTheme, blend));
   let finalFormItems
   let button
   let dialogButton
   let finalDialog
-  if(dialog.show) {
+  if (dialog.show) {
     button = <DialogButton dialog={dialog}></DialogButton>
     blend.buttonWidth = 'auto'
     dialogButton = <CustomButton blend={blend} refs={refs} getData={getData} requiredItems={requiredItems} dialog={dialog}></CustomButton>
@@ -54,34 +58,42 @@ export function render(element, items, blendGlobalTheme, blend, refs, getData, r
   }
 
 
-const store = configureStore({
-  reducer: {
-    forms: formsReducer
-  },
-});
+  const store = configureStore({
+    reducer: {
+      forms: formsReducer
+    },
+  });
 
-let notification
-if(blend.showSuccessMsg) {
-  notification = <Notification></Notification>
-}
+  let notification
+  if (blend.showSuccessMsg) {
+    notification = <Notification></Notification>
+  }
 
   ReactDOM.render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        {finalDialog}
-      <Grid 
-        container
-        wrap={'nowrap'}
-        justifyContent={items.length === 0 || dialog.show ? 'center' : 'flex-start'}
-        flexDirection='column' 
-        height='100%'
-        >
-        {finalFormItems}
-        {button}
-        {notification}
-      </Grid>
-      </ThemeProvider>
-    </Provider>,
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Provider store={store}>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            {finalDialog}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                wrap: 'nowrap',
+                justifyContent: typeof finalFormItems === 'undefined' || finalFormItems.length === 0 || dialog.show ? 'center' : 'flex-start',
+                height: '100%',
+                paddingRight: '10px',
+                paddingLeft: '10px',
+              }}
+            >
+              {finalFormItems}
+              {button}
+              {notification}
+            </Box>
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </Provider>
+    </LocalizationProvider>,
     element
   );
 }

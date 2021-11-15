@@ -5,6 +5,7 @@
 .idea
 .vscode
 .npmrc
+.zip
 
 node_modules
 dist

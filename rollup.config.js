@@ -12,7 +12,7 @@ module.exports = [
   {
     input: path.resolve(__dirname, 'src', './index.js'),
     output: {
-      file: path.resolve(__dirname, 'dist', 'qlik-blends.js'),
+      file: path.resolve(__dirname, 'dist', 'automation-trigger.js'),
       name: 'mystuff',
       format: 'umd',
       exports: 'default',

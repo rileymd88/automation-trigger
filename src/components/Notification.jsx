@@ -1,9 +1,9 @@
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/core/Alert';
-import Portal from '@material-ui/core/Portal';
-import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@mui/material/TextField';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Portal from '@mui/material/Portal';
+import makeStyles from '@mui/styles/makeStyles';
 import { selectMessage, selectSnackbarOpen, selectSeverity, setSnackbarOpen } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 

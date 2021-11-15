@@ -1,14 +1,14 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import makeStyles from '@mui/styles/makeStyles';
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { setItem, selectAllItems, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 
 export default function CustomCheckbox({block, globalTheme, blend}) {
   const dispatch = useDispatch();
   const useStyles = makeStyles((theme) => ({
-    numberField: {
+    checkbox: {
       width: `${block.width}%`,
       marginBottom: 12,
       alignSelf: block.alignment

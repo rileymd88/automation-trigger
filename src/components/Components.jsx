@@ -8,6 +8,7 @@ import CustomSwitch from "./CustomSwitch"
 import CustomSlider from "./CustomSlider";
 import CustomButton from "./CustomButton";
 import CustomDatePicker from "./CustomDatePicker";
+import CustomRating from "./CustomRating";
 
 const Components = {
   textInput: TextInput,
@@ -17,7 +18,9 @@ const Components = {
   dropdownMultiple: DropdownMultiple,
   switch: CustomSwitch,
   slider: CustomSlider,
-  button: CustomButton
+  button: CustomButton,
+  rating: CustomRating,
+  datePicker: CustomDatePicker,
 };
 
 export default (block, blendGlobalTheme, blend, refs, getData) => {

@@ -7,6 +7,7 @@ export const slice = createSlice({
     dialogOpen: false,
     snackbarOpen: false,
     message: '',
+    redirect: '',
     severity: 'success'
   },
   reducers: {
@@ -28,6 +29,9 @@ export const slice = createSlice({
     setMessage: (state, action) => {
       state.message = action.payload
     },
+    setRedirect: (state, action) => {
+      state.redirect = action.payload
+    },
     setSeverity: (state, action) => {
       state.severity = action.payload
     },
@@ -46,7 +50,8 @@ export const selectItem = function(state, ref) {
 export const selectDialog = state => state.forms.dialogOpen;
 export const selectSnackbarOpen = state => state.forms.snackbarOpen;
 export const selectMessage = state => state.forms.message;
+export const selectRedirect = state => state.forms.redirect;
 export const selectSeverity = state => state.forms.severity;
-export const { setItem, removeItem, setDialog, setMessage, setSnackbarOpen, setSeverity } = slice.actions;
+export const { setItem, removeItem, setDialog, setMessage, setRedirect, setSnackbarOpen, setSeverity } = slice.actions;
 
 export default slice.reducer;

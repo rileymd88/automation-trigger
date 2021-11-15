@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import makeStyles from '@mui/styles/makeStyles';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import { setItem, selectAllItems, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 

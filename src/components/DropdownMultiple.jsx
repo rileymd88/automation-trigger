@@ -1,11 +1,9 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { setItem, selectAllItems, selectItem } from '../states/formsSlice'
+import makeStyles from '@mui/styles/makeStyles';
+import { setItem, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/core/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
   const dispatch = useDispatch();
@@ -22,10 +20,10 @@ export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
   if(typeof tmpValue === 'undefined') {
     const payload = {
       ref: block.ref,
-      data: block.defaultValueString.split(',')
+      data: block.defaultValueString ? block.defaultValueString.split(',') : []
     }
     dispatch(setItem(payload))
-    value = block.defaultValueString.split(',')
+    value = block.defaultValueString ? block.defaultValueString.split(',') : []
   }
   else {
       value = tmpValue
@@ -45,7 +43,7 @@ export default function DropdownMultiple({block, blendGlobalTheme, blend}) {
     <Autocomplete
       multiple
       forcePopupIcon={false}
-      value={value}
+      value={typeof value === 'object' ? value : []}
       variant={blendGlobalTheme.variant}
       options={options.length > 1 ? options: []}
       className={classes.dropdown}
