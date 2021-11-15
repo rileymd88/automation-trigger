@@ -1,7 +1,7 @@
 {
 	"name": "Automation trigger",
 	"icon": "code",
-  "version": "1.0.0",
+  "version": "1.1.0",
 	"description": "Automation trigger for Qlik Sense",
   "author": "Riley MacDonald",
   "type": "visualization"
