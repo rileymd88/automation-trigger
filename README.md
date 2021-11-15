@@ -1,4 +1,4 @@
-# Automation trigger for Qlik Application Automation
+# Automation trigger for Qlik Sense
 Automation trigger for Qlik Sense is a extension which allows you to trigger Automations directly from Qlik Sense.
 * Dialog
 ![blend27](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend27.PNG)
