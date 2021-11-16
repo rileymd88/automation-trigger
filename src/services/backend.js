@@ -32,7 +32,8 @@ function post(endpoint, executionToken, body) {
   return new Promise(async function (resolve, reject) {
     try {
       const headers = {
-        'X-Execution-Token': executionToken
+        'X-Execution-Token': executionToken,
+        'Content-Type': 'application/json'
       }
       const options = {
         method: 'POST',
@@ -69,7 +70,7 @@ export const getSheetId = () => {
 
 
 export const getAutomations = async () => {
-  const automations = await get('items?resourceType=automation')
+  const automations = await get('items?resourceType=automation&limit=100')
   return automations.data.map(function (a) {
     return { value: a.resourceId, label: a.name }
   })

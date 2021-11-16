@@ -1,86 +1,194 @@
 # Automation trigger for Qlik Sense
-Automation trigger for Qlik Sense is a extension which allows you to trigger Automations directly from Qlik Sense.
-* Dialog
-![blend27](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend27.PNG)
-* Within extension
-![blend28](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend28.PNG)
-* Simple button
-![blend29](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend29.PNG)
-# Installation steps:
-1. Download the latest release from the following link: https://github.com/rileymd88/qlik-blends/files/6378232/qlik-blends.zip 
-2. Import into Qlik Sense using the management console
-3. If using Qlik Sense SaaS, you will need to add a content security policy with the following details:
-- Name: Blendr API
-- Orgin: api.blendr.io
-- Directive: connect-src
-* ![blend30](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend30.PNG)
+Automation trigger for Qlik Sense is a extension which allows you to trigger automations directly from Qlik Sense. There are three basic options on how you can trigger an automation:
+* Dialog with form items
 
-# Using the extension
+![a1](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a1.PNG)
+* Within extension with form items
+
+![a2](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a2.PNG)
+* Simple button
+
+![a3](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a3.PNG)
+# Installation steps:
+1. Download the latest release from the following link: https://github.com/rileymd88/automation-trigger/releases/download/V1.1.0/automation-trigger-ext.zip
+2. Import into Qlik Sense using the management console
+
+# Release Notes
+* 1.1.0
+  * Added Date picker form item
+  * Added Rating form item
+  * Renamed everything to reference automations instead of blends
+  * Added ability to select automations from a list
+  * Added direct link to automation from the extension
+  * Added ability to copy an input block from the extension which can be pasted into an automation for faster startup
+  * Added ability to create bookmark when the automation is triggered and have this bookmark ID sent to the automation
+  * Added font color theme property
+* 1.0.1
+  * Bug fix for the Dropdown multiple select form item
+* 1.0.0
+  * First release
+
+# Properties
 ### Dimensions & measures
-* Any data added as dimensions and measures will be sent to the Blend within the body of the webhook
+* Any data added as dimensions and measures will be sent to the automation within the body of the webhook 
 
 ### Form
-* You can click on add items to add a form item to the extension. You will then be prompted to choose the type and set some appearance settings. Each item will save data which will also be sent to the Blend within the body of the webhook. The `Reference` field will be used as a JSON key in the data which gets sent to the body of the webhook so either remember the generated id or change it to something you can remember. 
+* You can click on add items to add a form item to the extension. You will then be prompted to choose the type and set some appearance settings. Each item will save data which will also be sent to the automation within the body of the webhook. The `Reference` field will be used as a JSON key in the data which gets sent to the body of the webhook so either remember the generated id or change it to something you can remember. 
 **Ensure that the reference string does NOT contain any spaces or strange characters** 
 
-### Blend
-* Here you can enter the details of which Blend should be triggered. You can find this correct URL and execution token by going to your Blend editor, clicking on start and under Inputs change the Run Mode to Triggered.
-**Ensure that you use the POST URL and NOT the GET URL**
+* The following form item types available
+  * Checkbox
+  * Date picker
+  * Dropdown
+  * Dropdown multiple select
+  * Number
+  * Rating
+  * Slider
+  * Switch
+  * Text
 
-### Example usage with a Blend 
-1. Create an empty Blend by clicking on Add new Blend and then Start from blank
-![blend1](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend1.PNG)
-![blend2](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend2.PNG)  
-2. Change the run mode to triggered and then hit save
-![blend3](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend3.PNG)
-3. You should now see the Webhook URLs. Copy the POST URL and Execution Token
-![blend4](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend4.PNG)
-4. Now navigate to your Qlik Sense app and find the Qlik blends extension and add it to your sheet 
-![blend5](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend5.PNG)
-5. Go to the extension properties and add the POST URL and execution token from step 3 into the Blend properties
-![blend6](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend6.PNG)
-6. Now add the required dimensions/measures/form items that you want to send to your Blend. For this example I picked 1 dimension (Category) and 2 form items (comment and confidence)
-![blend7](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend7.PNG)
-![blend8](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend8.PNG)
-![blend9](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend9.PNG)
-7. Now the extension is set up and when we click on Run blend, our blend will be run. You can enter a comment, change the slider and click Run blend now.
-8. If everything worked correctly you should get a blank green message below. If the green message contains something like 404 or 405, then most likely you did not correctly copy the POST URL and execution token in step 3
-![blend10](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend10.PNG)
-9. Now we can continue working on the Blend to do something once we receive the trigger and data from Qlik Sense
-10. Navigate back to the Blendr editor
-11. Search for the block Variable and link it to the Start block
-![blend12](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend12.PNG)
-12. Click on the Variable block and then click on Manage variables 
-![blend13](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend13.PNG)
-13. Give your variable the name data and then click on + Add new variable and then Save
-![blend14](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend14.PNG)
-![blend15](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend15.PNG)
-14. Now select data from the Variable * dropdown within the Inputs section and then click + Add operation and select Set value of data. 
-![blend16](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend16.PNG)
-15. Now click on the empty Value input list and select Add formula
-![blend17](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend17.PNG)
-16. Search for the function called Object and then click on Object
-![blend18](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend18.PNG)
-17. Now click on the json * input list and select output from Start
-![blend19](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend19.PNG)
-18. Now click on raw_body and then click Save
-![blend20](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend20.PNG)
-![blend21](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend21.PNG)
-19. Now the data from Qlik Sense has been converted into a JSON object and can be used in your Blend
-20. You can save the Blend and trigger it again from Qlik Sense to ensure that the new data variable has values to make it easier to build your Blend. For this use case I will force the selection of only 1 Category in my app so only 1 Category will be sent to Blendr along with the form data. This can be done under the Blend settings of the extension by enabling the Condition to enable blend
-![blend22](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend22.PNG)
-21. Now you can navigate back to your Blend and use the data variable to use together with any of the 600+ connectors that Blendr offers
-22. For this example we can simply set up an Output block back to the extension which will be showed once the Blend has finished. You can do this for all your Blends to give users feedback about their Blend.
-![blend23](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend23.PNG)
-![blend24](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend24.PNG)
-![blend25](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend25.PNG)
-23. Now when you run the Blend from Qlik Sense you should see a short message which details some of the data sent to the Blend
-![blend25](https://raw.githubusercontent.com/rileymd88/data/master/qlik-blends/blend26.PNG)
+### Automation
+* **Select an automation:** Here you can select an automation - At this time it is only possible to select an Automation that you have created
+* **Automation link:** This is a hyperlink which brings you directly to the automation editor for the selected automation
+* **Copy input block:** By clicking on this button, you will copy into your clipboard an input block for your automation which parses the data sent from this extension to the automation. From within your automation simply right click and select Paste Block(s)
+* **Include selections:** If this option is enabled, a bookmark will be created when the automation is run and the bookmark id will be sent to the automation. You can use the bookmark id together with the apply bookmark
+* **Condition to enable automation:** Here you can use a Qlik Sense formula to determine when it should be possible to run the automation. If the formula returns 1, the automation can be run. If the formula returns 0, the automation cannot be run
+
+### Appearance 
+* **Run automation button:** Here you can define the look and feel of the run automation button
+* **Dialog:** Here you can choose if you want to have a dialog to enter form information. The look and feel of the dialog can also be defined here
+* **Notification:** Here you can choose if you want to have a notification pop up when the automation has finished running. You can define the message by using the Output block in your automation. If you would like to redirect your end user after the automation has run, then you can do this be returning a JSON response in the following format within the Output block:
+```
+{
+  "message": "Hello world",
+  "redirect": "https://google.de",
+  "newTab": true,
+  "timeout
+}
+```
+**When using the redirect option ensure that the Display Mode for the Output block is set to Use only this output (overwrite previous outputs)!**
+
+![p1](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/p1.PNG)
+
+**attribute**|**description**|**type**
+:-----:|:-----:|:-----:
+message|The message which will be shown in the notification|string
+redirect|The URL which the user will be redirected to after the automation has run|string
+newTab|Determines if the URL will open in a new tab or not|boolean
+timeout|The amount of time in ms before redirecting the user |integer
+ 
+ You can also choose to have the notification message be based on a Qlik Sense formula 
+* **Theme:** Here you can define the color scheme for the extension
+
+# Getting started with the extension
+1. Create an empty automation by clicking on + Add new and then New automation from the Qlik Sense hub 
+
+![a4](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a4.PNG)
+
+2. Enter a name for your automation and click Save
+
+![a5](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a5.PNG)
+
+3. Select the Start block and then set the Run Mode to Triggered
+
+![a6](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a6.PNG)
+
+4. Now navigate to your Qlik Sense app and find the Automation trigger extension and add it to your sheet 
+5. Go to the extension properties go to the Automation section and select your automation
+6. Click on the Copy input block and then click on the Automation link to open the automation
+
+![a7](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a7.PNG)
+
+7. On the canvas of the automation, right click and select Paste Block(s). You should now see a new block called Inputs on your canvas. This block will parse the data sent from the extension to make it easy to use in your automation
+
+![a8](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a8.PNG)
+
+8. Drag the new Input block below the Start block so that are connected
+
+![a9](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a9.PNG)
+
+9. Now you can use the data from the extension in your automation as it will available in the Input block
+10. For this basic example, I have set up several form items and have the dimensions User and Time
+
+![a10](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a10.PNG)
+
+![a11](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a11.PNG)
+
+9. Once I click on the automation, I can then view what the received data looks like by going to the Overview of the automation and selecting the Last Run tab and the Per Block option
+
+![a15](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a15.PNG)
+
+```
+{
+  "form": {
+    "comment": "Here is a test comment",
+    "endDate": "2021-11-16T07:00:00.000Z",
+    "rating": "4",
+    "probability": 8
+  },
+  "data": {
+    "hypercube": [
+      {
+        "qMatrix": [
+          [
+            {
+              "qText": "UserDirectory=; UserId=auth0|a08D000001KnbpKIAR",
+              "qNum": "NaN",
+              "qElemNumber": 0,
+              "qState": "O"
+            },
+            {
+              "qText": "16.11.2021 11:33:02",
+              "qNum": 44516.48127314815,
+              "qElemNumber": 0,
+              "qState": "O"
+            }
+          ]
+        ],
+        "qTails": [
+          {
+            "qUp": 0,
+            "qDown": 0
+          },
+          {
+            "qUp": 0,
+            "qDown": 0
+          }
+        ],
+        "qArea": {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 2,
+          "qHeight": 1
+        }
+      }
+    ]
+  },
+  "bookmarkid": "",
+  "app": "d62893fa-2c18-49cc-8013-31dc47508ea9",
+  "sheetid": "ec5e7e0b-6a65-4f73-8271-fb1c5c5e28c0"
+}
+```
+10. If we want to ensure we receive a message when the automation has run, we can add an Output block to our automation. If you also want to redirect users after the automation has run, please refer to the documentation above in the Appearance and Notification area of the documentation
+
+![a12](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a12.PNG)
+
+![a13](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a13.PNG)
+
+11. After adding the Output block to our automation and clicking save, we should see the following notification in the Qlik Sense app after triggering the automation
+
+![a14](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a14.PNG)
+
+# Current limitations
+* The extension will only show the first 100 automations for each user
+* The extension can only send a maximum of 20 columns and 500 rows of data to an automation
+* If this extension triggers a reload within the same app where it exists, notification messages will be blank. To workaround this you can send the input block before a reload is started
 
 # Developing the extension
 1. Clone the repository
+2. In the package.json file replace `nebula sense --ext src/extDefinition.js --meta ./meta.json && cd ../ && python build.py extension` with `nebula sense --ext src/extDefinition.js --meta ./meta.json` 
 2. Run `npm i`
 3. Run `npm run build`
 4. Run `npm run sense`
-5. Then zip the contents in the folder qlik-blends-ext and then upload as an extension
+5. Then zip the contents in the folder automation-trigger-ext and then upload as an extension
 

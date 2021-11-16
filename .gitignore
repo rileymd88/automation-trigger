@@ -5,7 +5,7 @@
 .idea
 .vscode
 .npmrc
-.zip
+*.zip
 
 automation-trigger-ext
 /automation-trigger-ext

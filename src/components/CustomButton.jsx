@@ -54,10 +54,11 @@ export default function CustomButton({ blend, refs, getData, requiredItems, dial
           delete clone[key]
         }
       }
+      let bookmarkId
       if (blend.sendSelections) {
-        const bookmarkId = await createBookmark(blend.app)
+        bookmarkId = await createBookmark(blend.app)
       }
-      const msg = await executeAutomation(blend.id, { form: clone, data: getData(), bookmarkId: blend.sendSelections ? bookmarkId : '', appId: getAppId(), sheetId: getSheetId() }, blend.executionToken)
+      const msg = await executeAutomation(blend.id, { form: clone, data: { hypercube: getData() }, bookmarkid: blend.sendSelections ? bookmarkId : '', app: getAppId(), sheetid: getSheetId() }, blend.executionToken)
 
       if (blend.showSuccessMsg) {
         dispatch(setSeverity('success'))

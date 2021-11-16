@@ -1,5 +1,6 @@
 import { getAutomations, getBaseUrl } from './services/backend'
 import luiIcons from './utils/lui-icons';
+import copy from 'clipboard-copy';
 
 var component = {
   label: 'Item type',
@@ -478,6 +479,15 @@ var sendSelections = {
   defaultValue: false,
 }
 
+var copyButton = {
+  component: 'button',
+  label: 'Copy input block',
+  action: function() {
+    const jsonInputBlock = {"blocks":[{"id":"95447E1E-EB22-4094-8FE7-7702E862A7B1","type":"FormBlock","x":92,"y":195,"disabled":false,"name":"inputs","displayName":"Inputs","comment":"Receive data from automation trigger","childId":null,"inputs":[],"settings":[{"id":"persist_data","value":"no","type":"select","displayValue":"No","structure":[]}],"collapsed":[{"name":"loop","isCollapsed":false}],"form":[{"id":"inputs-input-0","label":"form","helpText":null,"type":"data","values":null,"isRequired":true,"options":{},"order":0},{"id":"inputs-input-1","label":"data","helpText":null,"type":"data","values":null,"isRequired":true,"options":{},"order":1},{"id":"inputs-input-2","label":"sheetid","helpText":"Sheet ID","type":"input","values":null,"isRequired":true,"options":{},"order":2},{"id":"inputs-input-3","label":"app","helpText":"App ID","type":"input","values":null,"isRequired":true,"options":{},"order":3},{"id":"inputs-input-4","label":"bookmarkid","helpText":"Bookmark ID","type":"input","values":null,"isRequired":false,"options":{},"order":4}],"persistData":"no"}],"variables":[]}
+    copy(JSON.stringify(jsonInputBlock))
+  }
+}
+
 var blend = {
   type: "items",
   label: "Automation",
@@ -486,6 +496,7 @@ var blend = {
     blends: blends,
     blendExecutionToken: blendExecutionToken,
     automationLink: automationLink,
+    copyButton: copyButton,
     sendSelections: sendSelections,
     useCondition: useCondition,
     condition: condition
