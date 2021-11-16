@@ -22,6 +22,7 @@ Automation trigger for Qlik Sense is a extension which allows you to trigger aut
   * Added direct link to automation from the extension
   * Added ability to copy an input block from the extension which can be pasted into an automation for faster startup
   * Added ability to create bookmark when the automation is triggered and have this bookmark ID sent to the automation
+  * Added ability to redirect users to another website after the automation has finished
   * Added font color theme property
 * 1.0.1
   * Bug fix for the Dropdown multiple select form item
@@ -66,7 +67,7 @@ Automation trigger for Qlik Sense is a extension which allows you to trigger aut
   "timeout
 }
 ```
-**When using the redirect option ensure that the Display Mode for the Output block is set to Use only this output (overwrite previous outputs)!**
+**When using the redirect option ensure that the Display Mode for the Output block is set to Use only this output (overwrite previous outputs) and that popups are not being blocked**
 
 ![p1](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/p1.PNG)
 
@@ -94,7 +95,7 @@ timeout|The amount of time in ms before redirecting the user |integer
 ![a6](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a6.PNG)
 
 4. Now navigate to your Qlik Sense app and find the Automation trigger extension and add it to your sheet 
-5. Go to the extension properties go to the Automation section and select your automation
+5. Go to the extension properties and go to the Automation section and select your automation
 6. Click on the Copy input block and then click on the Automation link to open the automation
 
 ![a7](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a7.PNG)
@@ -169,7 +170,7 @@ timeout|The amount of time in ms before redirecting the user |integer
   "sheetid": "ec5e7e0b-6a65-4f73-8271-fb1c5c5e28c0"
 }
 ```
-10. If we want to ensure we receive a message when the automation has run, we can add an Output block to our automation. If you also want to redirect users after the automation has run, please refer to the documentation above in the Appearance and Notification area of the documentation
+10. If we want to ensure we receive a message when the automation has run, we can add an Output block to our automation. If you also want to redirect users after the automation has run, please refer to the documentation above in the Appearance area
 
 ![a12](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a12.PNG)
 
