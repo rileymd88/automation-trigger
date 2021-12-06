@@ -5,6 +5,8 @@ import extDefinition from './extDefinition'
 import data from './data';
 import { render } from './root';
 
+let rendered = false
+
 export default function supernova() {
   return {
     qae: {
@@ -19,8 +21,13 @@ export default function supernova() {
         return layout.qHyperCube.qDataPages
       }
       useEffect(async () => {
-        if (layout.blend.id.length > 1) {
-          await applyExecutionToken(app, layout.blend.id, layout.qInfo.qId)
+        if(!rendered) {
+          rendered = true
+        }
+        else {
+          if (layout.blend.id.length > 1) {
+            await applyExecutionToken(app, layout.blend.id, layout.qInfo.qId)
+          }
         }
       }, [layout.blend.id]);
       

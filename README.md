@@ -22,6 +22,7 @@ Automation trigger for Qlik Sense is a extension which allows you to trigger aut
   * Added direct link to automation from the extension
   * Added ability to copy an input block from the extension which can be pasted into an automation for faster startup
   * Added ability to create bookmark when the automation is triggered and have this bookmark ID sent to the automation
+  * Added sheetId and appId to data sent to automation
   * Added ability to redirect users to another website after the automation has finished
   * Added font color theme property
 * 1.0.1
