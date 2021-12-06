@@ -6,6 +6,7 @@ import data from './data';
 import { render } from './root';
 
 let rendered = false
+let firstAutomationId = ''
 
 export default function supernova() {
   return {
@@ -23,9 +24,10 @@ export default function supernova() {
       useEffect(async () => {
         if(!rendered) {
           rendered = true
+          firstAutomationId = layout.blend.id
         }
         else {
-          if (layout.blend.id.length > 1) {
+          if (layout.blend.id.length > 1 && firstAutomationId !== layout.blend.id) {
             await applyExecutionToken(app, layout.blend.id, layout.qInfo.qId)
           }
         }
