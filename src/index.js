@@ -1,12 +1,11 @@
 import { useElement, useLayout, useEffect, useApp } from '@nebula.js/stardust';
-import { applyExecutionToken } from './services/backend';
+import { applyExecutionToken, getAutomations } from './services/backend';
 import properties from './object-properties';
 import extDefinition from './extDefinition'
 import data from './data';
 import { render } from './root';
 
 let rendered = false
-let firstAutomationId = ''
 
 export default function supernova() {
   return {
@@ -24,11 +23,14 @@ export default function supernova() {
       useEffect(async () => {
         if(!rendered) {
           rendered = true
-          firstAutomationId = layout.blend.id
         }
         else {
-          if (layout.blend.id.length > 1 && firstAutomationId !== layout.blend.id) {
-            await applyExecutionToken(app, layout.blend.id, layout.qInfo.qId)
+          if (layout.blend.id.length > 1) {
+            const automations = await getAutomations()
+            const ids = automations.map(a=>a.value)
+            if(ids.includes(layout.blend.id)) {
+              await applyExecutionToken(app, layout.blend.id, layout.qInfo.qId)
+            }
           }
         }
       }, [layout.blend.id]);
