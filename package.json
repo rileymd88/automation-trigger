@@ -22,7 +22,7 @@
     "build": "rollup -c rollup.config.js -w",
     "lint": "eslint src",
     "start": "nebula serve --no-build",
-    "sense": "nebula sense --ext src/extDefinition.js --meta ./meta.json && cd ../ && python build.py extension",
+    "sense": "nebula sense --ext src/extDefinition.js --meta ./meta.json --sourcemap true && cd ../ && python build.py extension",
     "test:integration": "aw puppet --testExt '*.int.js' --glob 'test/integration/**/*.int.js'"
   },
   "devDependencies": {

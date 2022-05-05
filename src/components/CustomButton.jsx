@@ -143,6 +143,7 @@ export default function CustomButton({ blend, refs, getData, requiredItems, dial
   if (!requiredItemsFilled) {
     disabled = true
   }
+
   let startIcon
   let endIcon
   if (blend.icon.useIcon) {
@@ -160,8 +161,8 @@ export default function CustomButton({ blend, refs, getData, requiredItems, dial
       startIcon={startIcon}
       endIcon={endIcon}
       disabled={disabled}
-      pending={loading}
-      pendingIndicator={blend.runningBlendLabel}
+      loading={loading}
+      loadingIndicator={blend.runningBlendLabel}
       variant="contained"
       color="primary"
       onClick={onButtonClick}>

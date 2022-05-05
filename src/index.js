@@ -1,4 +1,4 @@
-import { useElement, useLayout, useEffect, useApp } from '@nebula.js/stardust';
+import { useElement, useLayout, useEffect, useApp, useConstraints } from '@nebula.js/stardust';
 import { applyExecutionToken, getAutomations } from './services/backend';
 import properties from './object-properties';
 import extDefinition from './extDefinition'
@@ -17,6 +17,8 @@ export default function supernova() {
       const app = useApp()
       const el = useElement()
       const layout = useLayout()
+      const { active } = useConstraints()
+      const edit = active ? active : false
       const getData = function () {
         return layout.qHyperCube.qDataPages
       }
@@ -25,7 +27,7 @@ export default function supernova() {
           rendered = true
         }
         else {
-          if (layout.blend.id.length > 1) {
+          if (layout.blend.id.length > 1 && active) {
             const automations = await getAutomations()
             const ids = automations.map(a=>a.value)
             if(ids.includes(layout.blend.id)) {
