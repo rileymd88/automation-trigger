@@ -45,78 +45,58 @@ export default function CustomButton({ blend, refs, getData, requiredItems, dial
     }
   })
 
-  const onButtonClick = async () => {
-    try {
-      setLoading(true)
-      let clone = { ...items }
-      for (const key in clone) {
-        if (!refs.includes(key)) {
-          delete clone[key]
-        }
-      }
-      let bookmarkId
-      if (blend.sendSelections) {
-        bookmarkId = await createBookmark(blend.app)
-      }
-      const msg = await executeAutomation(blend.id, { form: clone, data: { hypercube: getData() }, bookmarkid: blend.sendSelections ? bookmarkId : '', app: getAppId(), sheetid: getSheetId() }, blend.executionToken)
-
-      if (blend.showSuccessMsg) {
-        dispatch(setSeverity('success'))
-        if (blend.showSuccessMsgOutput) {
-          if (typeof msg !== 'undefined') {
-            try {
-              // json
-              let jsonMsg = JSON.parse(msg)
-              dispatch(setMessage(jsonMsg.message))
-              dispatch(setRedirect(jsonMsg.redirect))
-              if (typeof jsonMsg.redirect !== 'undefined') {
-                setTimeout(() => {
-                  if (jsonMsg.newTab) {
-                    window.open(jsonMsg.redirect, '_blank');
-                  }
-                  else {
-                    window.location.href = jsonMsg.redirect
-                  }
-                }, typeof jsonMsg.timeout !== 'undefined' ? jsonMsg.timeout : 800);
+  const parseMsg = (msg) => {
+    if (typeof msg !== 'undefined') {
+      if (blend.showSuccessMsgOutput) {
+        try {
+          let jsonMsg = JSON.parse(msg)
+          dispatch(setMessage(jsonMsg.message))
+          dispatch(setRedirect(jsonMsg.redirect))
+          if (typeof jsonMsg.redirect !== 'undefined') {
+            setTimeout(() => {
+              if (jsonMsg.newTab) {
+                window.open(jsonMsg.redirect, '_blank');
               }
-            }
-            catch (e) {
-              // array
-              if (typeof msg === 'object' && msg.length > 0) {
-                dispatch(setMessage(msg.join(' ')))
-              }
-              // string
               else {
-                dispatch(setMessage(msg))
+                window.location.href = jsonMsg.redirect
               }
-            }
-
-            // json
-
+            }, typeof jsonMsg.timeout !== 'undefined' ? jsonMsg.timeout : 800);
           }
         }
-        else {
-          dispatch(setMessage(blend.customSuccessMsg))
-        }
-        dispatch(setSnackbarOpen(true))
-      }
-      setLoading(false)
-    }
-    catch (err) {
-      if (blend.showSuccessMsg) {
-        dispatch(setSeverity('warning'))
-        if (blend.showSuccessMsgOutput) {
-          if (typeof msg !== 'undefined') {
+        catch (e) {
+          // array
+          if (typeof msg === 'object' && msg.length > 0) {
+            dispatch(setMessage(msg.join(' ')))
+          }
+          // string
+          else {
             dispatch(setMessage(msg))
           }
         }
-        else {
-          dispatch(setMessage(blend.customErrorMsg))
-        }
-        dispatch(setSnackbarOpen(true))
       }
-      setLoading(false)
-      console.error(err)
+      else {
+        dispatch(setMessage(blend.customErrorMsg))
+      }
+    }
+  }
+
+  const onButtonClick = async () => {
+    setLoading(true)
+    let clone = { ...items }
+    for (const key in clone) {
+      if (!refs.includes(key)) {
+        delete clone[key]
+      }
+    }
+    let bookmarkId
+    if (blend.sendSelections) {
+      bookmarkId = await createBookmark(blend.app)
+    }
+    const m = await executeAutomation(blend.id, { form: clone, data: { hypercube: getData() }, bookmarkid: blend.sendSelections ? bookmarkId : '', app: getAppId(), sheetid: getSheetId() }, blend.executionToken)
+    dispatch(setSeverity(m.ok ? 'success': 'warning'))
+    parseMsg(m.msg)
+    if(blend.showSuccessMsg) {
+      dispatch(setSnackbarOpen(true))
     }
     if (dialog.show) {
       dispatch(setDialog(false))

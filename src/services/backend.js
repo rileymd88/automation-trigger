@@ -41,11 +41,26 @@ function post(endpoint, executionToken, body) {
         body: JSON.stringify(body)
       }
       const response = await fetch(`${baseUrl}/api/v1/${endpoint}`, options)
+      let data
+      
       if (response.status === 200) {
-        resolve(await response.json())
+        const data = await response.json()
+        if(data.status === 'queued') {
+          resolve({ok: false, msg: 'There was an erorr. Ensure you set your automation start block run mode to triggered.', code: 200})
+        }
+        else {
+          resolve({ok: true, msg: data, code: 200})
+        }
       }
-      else {
-        reject(response.status)
+      if (response.status === 500) {
+        const data = await response.json()
+        const msg = data[0].response.body.errors.map(e=>e.detail).join(' | ')
+        resolve({ok: false, msg: msg, code: 500})
+      }
+      if (response.status === 404) {
+        const data = await response.json()
+        const msg = data.errors.map(e=>e.detail).join(' | ')
+        resolve({ok: false, msg: msg, code: 404})
       }
     }
     catch (err) {
@@ -82,13 +97,7 @@ export const getAutomation = async (automationId) => {
 
 export const executeAutomation = async (automationId, data, executionToken) => {
   return new Promise(async function (resolve, reject) {
-    try {
-      const response = await post(`automations/${automationId}/actions/execute`, executionToken, data)
-      resolve(response)
-    }
-    catch (err) {
-      reject(err)
-    }
+      resolve(await post(`automations/${automationId}/actions/execute`, executionToken, data))
   })
 }
 
