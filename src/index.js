@@ -67,7 +67,7 @@ export default function supernova() {
           enabledCondition: layout.blend.enabledCondition,
           useEnabledCondition: layout.blend.useEnabledCondition
         }
-        render(el, formItems, blendGlobalTheme, blend, refs, getData, requiredItems, dialog);
+        render(el, formItems, blendGlobalTheme, blend, refs, getData, requiredItems, dialog, app, layout.qInfo.qId);
       }, [layout]);
     },
   };

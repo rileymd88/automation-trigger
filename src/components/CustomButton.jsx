@@ -6,7 +6,7 @@ import { selectAllItems, setDialog, setSnackbarOpen, setMessage, setSeverity, se
 import { useSelector, useDispatch } from 'react-redux';
 import CustomIcon from './CustomIcon'
 
-export default function CustomButton({ blend, refs, getData, requiredItems, dialog }) {
+export default function CustomButton({ blend, refs, getData, requiredItems, dialog, app, id }) {
   const dispatch = useDispatch();
   let height
   let width
@@ -92,7 +92,7 @@ export default function CustomButton({ blend, refs, getData, requiredItems, dial
     if (blend.sendSelections) {
       bookmarkId = await createBookmark(blend.app)
     }
-    const m = await executeAutomation(blend.id, { form: clone, data: { hypercube: getData() }, bookmarkid: blend.sendSelections ? bookmarkId : '', app: getAppId(), sheetid: getSheetId() }, blend.executionToken)
+    const m  = await executeAutomation(blend.id, { form: clone, data: { hypercube: getData() }, bookmarkid: blend.sendSelections ? bookmarkId : '', app: await getAppId(app), sheetid: await getSheetId(app, id) }, blend.executionToken)
     dispatch(setSeverity(m.ok ? 'success': 'warning'))
     parseMsg(m.msg)
     if(blend.showSuccessMsg) {
@@ -101,6 +101,7 @@ export default function CustomButton({ blend, refs, getData, requiredItems, dial
     if (dialog.show) {
       dispatch(setDialog(false))
     }
+    setLoading(false)
   };
 
   let disabled

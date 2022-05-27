@@ -13,7 +13,7 @@ import formsReducer from './states/formsSlice';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-export function render(element, items, blendGlobalTheme, blend, refs, getData, requiredItems, dialog) {
+export function render(element, items, blendGlobalTheme, blend, refs, getData, requiredItems, dialog, app, id) {
   const theme = createTheme(adaptV4Theme({
     palette: {
       mode: 'light',
@@ -48,12 +48,12 @@ export function render(element, items, blendGlobalTheme, blend, refs, getData, r
   if (dialog.show) {
     button = <DialogButton dialog={dialog}></DialogButton>
     blend.buttonWidth = 'auto'
-    dialogButton = <CustomButton blend={blend} refs={refs} getData={getData} requiredItems={requiredItems} dialog={dialog}></CustomButton>
+    dialogButton = <CustomButton blend={blend} refs={refs} getData={getData} requiredItems={requiredItems} dialog={dialog} app={app} id={id}></CustomButton>
     dialog.formItems = formItems
     finalDialog = <CustomDialog dialog={dialog} customButton={dialogButton}></CustomDialog>
   }
   else {
-    button = <CustomButton blend={blend} refs={refs} getData={getData} requiredItems={requiredItems} dialog={dialog}></CustomButton>
+    button = <CustomButton blend={blend} refs={refs} getData={getData} requiredItems={requiredItems} dialog={dialog} app={app} id={id}></CustomButton>
     finalFormItems = formItems
   }
 

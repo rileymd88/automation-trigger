@@ -1,6 +1,7 @@
-const baseUrl = window.location.href.split('qlikcloud.com')[0] + 'qlikcloud.com'
-const appId = window.location.href.split('qlikcloud.com/sense/app/')[1].split('/')[0]
-const sheetId = window.location.href.split('qlikcloud.com/sense/app/')[1].split('/')[2]
+//const baseUrl = window.location.href.split('qlikcloud.com')[0] + 'qlikcloud.com'
+//const appId = window.location.href.split('qlikcloud.com/sense/app/')[1].split('/')[0]
+//const sheetId = window.location.href.split('qlikcloud.com/sense/app/')[1].split('/')[2]
+const baseUrl = '..'
 
 function get(endpoint) {
   return new Promise(async function (resolve, reject) {
@@ -42,25 +43,25 @@ function post(endpoint, executionToken, body) {
       }
       const response = await fetch(`${baseUrl}/api/v1/${endpoint}`, options)
       let data
-      
+
       if (response.status === 200) {
         const data = await response.json()
-        if(data.status === 'queued') {
-          resolve({ok: false, msg: 'There was an erorr. Ensure you set your automation start block run mode to triggered.', code: 200})
+        if (data.status === 'queued') {
+          resolve({ ok: false, msg: 'There was an erorr. Ensure you set your automation start block run mode to triggered.', code: 200 })
         }
         else {
-          resolve({ok: true, msg: data, code: 200})
+          resolve({ ok: true, msg: data, code: 200 })
         }
       }
       if (response.status === 500) {
         const data = await response.json()
-        const msg = data[0].response.body.errors.map(e=>e.detail).join(' | ')
-        resolve({ok: false, msg: msg, code: 500})
+        const msg = data[0].response.body.errors.map(e => e.detail).join(' | ')
+        resolve({ ok: false, msg: msg, code: 500 })
       }
       if (response.status === 404) {
         const data = await response.json()
-        const msg = data.errors.map(e=>e.detail).join(' | ')
-        resolve({ok: false, msg: msg, code: 404})
+        const msg = data.errors.map(e => e.detail).join(' | ')
+        resolve({ ok: false, msg: msg, code: 404 })
       }
     }
     catch (err) {
@@ -74,12 +75,19 @@ export const getBaseUrl = () => {
   return baseUrl
 }
 
-export const getAppId = () => {
-  return appId
+export const getAppId = async (app) => {
+  return new Promise(async (resolve) => {
+    const appId = await app.evaluateEx('DocumentName()')
+    resolve(appId.qText)
+  })
 }
 
-export const getSheetId = () => {
-  return sheetId
+export const getSheetId = async (app, id) => {
+  return new Promise(async (resolve) => {
+    const obj = await app.getObject(id)
+    const parent = await obj.getParent()
+    resolve(parent.id)
+  })
 }
 
 
@@ -97,7 +105,7 @@ export const getAutomation = async (automationId) => {
 
 export const executeAutomation = async (automationId, data, executionToken) => {
   return new Promise(async function (resolve, reject) {
-      resolve(await post(`automations/${automationId}/actions/execute`, executionToken, data))
+    resolve(await post(`automations/${automationId}/actions/execute`, executionToken, data))
   })
 }
 
@@ -120,6 +128,8 @@ export const applyExecutionToken = async (app, automationId, thisObjectId) => {
     console.info('This user does not have access to modify to selected automation')
   }
 }
+
+
 
 export const createBookmark = (app) => {
   return new Promise(async function (resolve, reject) {
