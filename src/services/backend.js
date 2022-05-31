@@ -112,7 +112,7 @@ export const executeAutomation = async (automationId, data, executionToken) => {
 export const applyExecutionToken = async (app, automationId, thisObjectId) => {
   try {
     const automation = await getAutomation(automationId)
-    const executionToken = automation.execution_token
+    const executionToken = automation.executionToken
     const thisObject = await app.getObject(thisObjectId)
     const patchParams = {
       qSoftPatch: false,
