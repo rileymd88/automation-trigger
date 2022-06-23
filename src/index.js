@@ -1,5 +1,5 @@
 import { useElement, useLayout, useEffect, useApp, useConstraints } from '@nebula.js/stardust';
-import { applyExecutionToken, getAutomations } from './services/backend';
+import { applyExecutionToken, applyExecutionTokenMigration, getAutomations } from './services/backend';
 import properties from './object-properties';
 import extDefinition from './extDefinition'
 import data from './data';
@@ -31,7 +31,12 @@ export default function supernova() {
             const automations = await getAutomations()
             const ids = automations.map(a=>a.value)
             if(ids.includes(layout.blend.id)) {
-              await applyExecutionToken(app, layout.blend.id, layout.qInfo.qId)
+              if(typeof layout.blend.executionToken === 'undefined') {
+                await applyExecutionTokenMigration(app, layout.blend.id, layout.qInfo.qId, layout.blend)
+              }
+              else {
+                await applyExecutionToken(app, layout.blend.id, layout.qInfo.qId)
+              }
             }
           }
         }

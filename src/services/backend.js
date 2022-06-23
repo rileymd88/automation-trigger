@@ -129,7 +129,27 @@ export const applyExecutionToken = async (app, automationId, thisObjectId) => {
   }
 }
 
-
+export const applyExecutionTokenMigration = async (app, automationId, thisObjectId, b) => {
+  try {
+    const automation = await getAutomation(automationId)
+    const executionToken = automation.executionToken
+    let blend = {...b}
+    blend.executionToken = executionToken
+    const thisObject = await app.getObject(thisObjectId)
+    const patchParams = {
+      qSoftPatch: false,
+      qPatches: [{
+        qPath: '/blend',
+        qOp: 'replace',
+        qValue: JSON.stringify(blend)
+      }]
+    }
+    await thisObject.applyPatches(patchParams)
+  }
+  catch (e) {
+    console.info('This user does not have access to modify to selected automation')
+  }
+}
 
 export const createBookmark = (app) => {
   return new Promise(async function (resolve, reject) {

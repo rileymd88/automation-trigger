@@ -10,10 +10,12 @@ Automation trigger for Qlik Sense is a extension which allows you to trigger aut
 
 ![a3](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a3.PNG)
 # Installation steps:
-1. Download the latest release from the following link: https://github.com/rileymd88/automation-trigger/releases/download/v1.1.6/automation-trigger.zip
+1. Download the latest release from the following link: https://github.com/rileymd88/automation-trigger/releases/download/v1.1.7/automation-trigger.zip
 2. Import into Qlik Sense using the management console
 
 # Release Notes
+* 1.1.7
+  * Fixed bug when migrating extension from a version < 1.1.0
 * 1.1.6
   * Updated to deal with new automations API
 * 1.1.5
