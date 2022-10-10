@@ -84,6 +84,8 @@ export function render(element, items, blendGlobalTheme, blend, refs, getData, r
                 height: '100%',
                 paddingRight: '10px',
                 paddingLeft: '10px',
+                overflowY: 'auto',
+                overflowX: 'hidden',
               }}
             >
               {finalFormItems}

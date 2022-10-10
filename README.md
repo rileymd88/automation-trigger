@@ -14,6 +14,9 @@ Automation trigger for Qlik Sense is a extension which allows you to trigger aut
 2. Import into Qlik Sense using the management console
 
 # Release Notes
+* 1.1.8
+  * Text input will show multiple lines when longer text is inputted
+  * Fixed bug which prevented a vertical scrollbar from showing
 * 1.1.7
   * Fixed bug when migrating extension from a version < 1.1.0
 * 1.1.6

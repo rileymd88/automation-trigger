@@ -40,6 +40,7 @@ export default function TextInput({block, blendGlobalTheme, blend}) {
 
   return (
       <TextField
+        multiline
         variant={blendGlobalTheme.variant}
         value={value}
         className={classes.textField}
