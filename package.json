@@ -26,7 +26,7 @@
     "test:integration": "aw puppet --testExt '*.int.js' --glob 'test/integration/**/*.int.js'"
   },
   "devDependencies": {
-    "@after-work.js/aw": "6.0.10",
+    "@after-work.js/aw": "7.0.0-alpha.1",
     "@babel/cli": "7.4.4",
     "@babel/plugin-transform-react-jsx": "7.3.0",
     "@babel/preset-env": "7.4.5",
