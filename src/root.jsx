@@ -53,7 +53,7 @@ export function render(element, items, blendGlobalTheme, blend, refs, getData, d
     finalDialog = <CustomDialog dialog={dialog} customButton={dialogButton}></CustomDialog>
   }
   else {
-    button = <CustomButton blend={blend} refs={refs} getData={getData} items={items} requiredBooleanItems={requiredBooleanItems} dialog={dialog} app={app} id={id}></CustomButton>
+    button = <CustomButton blend={blend} refs={refs} getData={getData} items={items} dialog={dialog} app={app} id={id}></CustomButton>
     finalFormItems = formItems
   }
 
