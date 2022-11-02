@@ -58,7 +58,7 @@ var defaultValueDate = {
   type: 'number',
   ref: 'defaultValueDate',
   label: 'Default value',
-  defaultValue: '=Today()',
+  defaultValue: "=Date(Today(), 'YYYY/MM/DD')",
   expression: 'always',
   show: function (item) {
     return dateComponents.includes(item.component)
@@ -257,14 +257,25 @@ var required = {
     },
   ],
   defaultValue: false,
-  show: function (item) {
-    if (item.component !== 'switch' && item.component !== 'checkbox') {
-      return true
-    }
-    else {
-      return false
-    }
-  }
+}
+
+var requiredValue = {
+  ref: 'requiredValue',
+  type: 'boolean',
+  component: 'switch',
+  translation: 'Required value',
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  defaultValue: true,
+  show: (item) => item.required
 }
 
 var alignment = {
@@ -339,7 +350,8 @@ var config = {
             label: label,
             ref: ref,
             explainRef: explainRef,
-            required: required
+            required: required,
+            requiredValue: requiredValue,
           }
         }
       }

@@ -6,7 +6,7 @@ import { selectAllItems, setDialog, setSnackbarOpen, setMessage, setSeverity, se
 import { useSelector, useDispatch } from 'react-redux';
 import CustomIcon from './CustomIcon'
 
-export default function CustomButton({ blend, refs, getData, requiredItems, dialog, app, id }) {
+export default function CustomButton({ blend, refs, getData, items, dialog, app, id }) {
   const dispatch = useDispatch();
   let height
   let width
@@ -32,18 +32,38 @@ export default function CustomButton({ blend, refs, getData, requiredItems, dial
     },
   }));
   const classes = useStyles();
-  const items = useSelector(selectAllItems)
+  const itemsState = useSelector(selectAllItems)
   const [loading, setLoading] = React.useState(false)
+
   let requiredItemsFilled = true
-  requiredItems.map(function (ref) {
-    let state
-    for (let s in items) {
-      state = items[s]
-      if (state === "" || typeof state === 'undefined' || state === null) {
-        requiredItemsFilled = false
+
+  for(let i = 0; i<items.length;i++) {
+    const item = items[i]
+    if(item.required) {
+      const state = itemsState[item.ref]
+      if(item.component === 'checkbox' || item.component === 'switch') {
+        if(state === "" || typeof state === 'undefined' || state === null || state !== item.requiredValue) {
+          requiredItemsFilled = false
+          break
+        }
+        else {
+          requiredItemsFilled = true
+        }
+      }
+      else {
+        if(state === "" || typeof state === 'undefined' || state === null) {
+          requiredItemsFilled = false
+          break
+        }
+        else {
+          requiredItemsFilled = true
+        }
       }
     }
-  })
+  }
+    
+      
+ 
 
   const parseMsg = (msg) => {
     if (typeof msg !== 'undefined') {

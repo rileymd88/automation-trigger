@@ -52,7 +52,6 @@ export default function supernova() {
 
         const formItems = layout.items
         const refs = layout.items.map(i => i.ref)
-        const requiredItems = layout.items.filter(i => i.required).map(i => i.ref)
         const dialog = {
           app: layout.blend.app,
           id: layout.blend.id,
@@ -72,7 +71,7 @@ export default function supernova() {
           enabledCondition: layout.blend.enabledCondition,
           useEnabledCondition: layout.blend.useEnabledCondition
         }
-        render(el, formItems, blendGlobalTheme, blend, refs, getData, requiredItems, dialog, app, layout.qInfo.qId);
+        render(el, formItems, blendGlobalTheme, blend, refs, getData, dialog, app, layout.qInfo.qId);
       }, [layout]);
     },
   };
