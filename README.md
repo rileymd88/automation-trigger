@@ -10,10 +10,12 @@ Automation trigger for Qlik Sense is a extension which allows you to trigger aut
 
 ![a3](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a3.PNG)
 # Installation steps:
-1. Download the latest release from the following link: https://github.com/rileymd88/automation-trigger/files/9923030/automation-trigger.zip
+1. Download the latest release from the following link: https://github.com/rileymd88/automation-trigger/releases/download/v1.2.0/automation-trigger.zip
 2. Import into Qlik Sense using the management console
 
 # Release Notes
+* 1.2.0
+  * Added support for asynchronous automation runs
 * 1.1.9
   * Added required input setting to checkbox and switch
 * 1.1.8
@@ -78,13 +80,13 @@ Automation trigger for Qlik Sense is a extension which allows you to trigger aut
 ### Appearance 
 * **Run automation button:** Here you can define the look and feel of the run automation button
 * **Dialog:** Here you can choose if you want to have a dialog to enter form information. The look and feel of the dialog can also be defined here
-* **Notification:** Here you can choose if you want to have a notification pop up when the automation has finished running. You can define the message by using the Output block in your automation. If you would like to redirect your end user after the automation has run, then you can do this be returning a JSON response in the following format within the Output block:
+* **Notification:** Here you can choose if you want to have a notification pop up when the automation has finished running. You can define the message by using the Output block in your automation or within the extension itself. If your automation is running asynchronously, the Success message will show in the notification. The Success message can be found in Appearance -> Notification settings when toggling off the Show automation output switch. If you would like to redirect your end user after the automation has run, then you can do this be returning a JSON response in the following format within the Output block:
 ```
 {
   "message": "Hello world",
   "redirect": "https://google.de",
   "newTab": true,
-  "timeout
+  "timeout": 100
 }
 ```
 **When using the redirect option ensure that the Display Mode for the Output block is set to Use only this output (overwrite previous outputs) and that popups are not being blocked**

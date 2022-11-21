@@ -47,7 +47,7 @@ function post(endpoint, executionToken, body) {
       if (response.status === 200) {
         const data = await response.json()
         if (data.status === 'queued') {
-          resolve({ ok: false, msg: 'There was an erorr. Ensure you set your automation start block run mode to triggered.', code: 200 })
+          resolve({ ok: true, msg: 'queued', code: 200 })
         }
         else {
           resolve({ ok: true, msg: data, code: 200 })

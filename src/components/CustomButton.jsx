@@ -113,8 +113,8 @@ export default function CustomButton({ blend, refs, getData, items, dialog, app,
       bookmarkId = await createBookmark(blend.app)
     }
     const m  = await executeAutomation(blend.id, { form: clone, data: { hypercube: getData() }, bookmarkid: blend.sendSelections ? bookmarkId : '', app: await getAppId(app), sheetid: await getSheetId(app, id) }, blend.executionToken)
-    dispatch(setSeverity(m.ok ? 'success': 'warning'))
-    parseMsg(m.msg)
+    dispatch(setSeverity(m.ok || m.msg === 'queued' ? 'success': 'warning'))
+    parseMsg(m.msg === 'queued' ? blend.customSuccessMsg : m.msg )
     if(blend.showSuccessMsg) {
       dispatch(setSnackbarOpen(true))
     }
