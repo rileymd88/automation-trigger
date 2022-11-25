@@ -102,7 +102,7 @@ export default function CustomButton({ blend, refs, getData, items, dialog, app,
 
   const onButtonClick = async () => {
     setLoading(true)
-    let clone = { ...items }
+    let clone = { ...itemsState }
     for (const key in clone) {
       if (!refs.includes(key)) {
         delete clone[key]
