@@ -1,47 +1,47 @@
 import React from 'react';
-import TextField from '@mui/material/TextField';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import Portal from '@mui/material/Portal';
-import makeStyles from '@mui/styles/makeStyles';
+import { createPortal } from 'react-dom';
+import { Toast } from '@qlik/sprout-react';
 import { selectMessage, selectSnackbarOpen, selectSeverity, setSnackbarOpen } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-const useStyles = makeStyles((theme) => ({
-  notification: {
-    zIndex: 2000
-  },
-}));
-
 export default function Notification() {
   const dispatch = useDispatch()
-  const classes = useStyles()
   const showSnackbar = useSelector(selectSnackbarOpen)
   const message = useSelector(selectMessage)
   const severity = useSelector(selectSeverity)
-  
+
+  React.useEffect(() => {
+    if (!showSnackbar) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      dispatch(setSnackbarOpen(false))
+    }, 12000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [dispatch, showSnackbar]);
 
   const handleClose = async () => {
     dispatch(setSnackbarOpen(false))
   }
 
+  if (!showSnackbar) {
+    return null;
+  }
+
   return (
-    <Portal>
-    <Snackbar
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      open={showSnackbar} 
-      autoHideDuration={12000} 
-      onClose={handleClose}>
-      <Alert 
-      onClose={handleClose} 
-      severity={severity}>
-        {message}
-      </Alert>
-    </Snackbar>
-    </Portal>
+    createPortal(
+      <Toast.Container placement="bottom">
+        <Toast.Content
+          message={message}
+          onClose={handleClose}
+          severity={severity === 'warning' ? 'warning' : severity}
+        />
+      </Toast.Container>,
+      document.body
+    )
   );
 }

@@ -1,12 +1,11 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { Button } from '@qlik/sprout-react';
 import CustomIcon from './CustomIcon'
 import { setDialog } from '../states/formsSlice'
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { getButtonBrandStyle, getButtonStyle } from './component-utils';
 
-export default function DialogButton({dialog}) {
+export default function DialogButton({ dialog, blendGlobalTheme }) {
   const dispatch = useDispatch();
   let height
   let width
@@ -22,15 +21,6 @@ export default function DialogButton({dialog}) {
   else {
     width = `${dialog.buttonWidth}%`
   }
-  
-  const useStyles = makeStyles((theme) => ({
-    button: {
-      width: width,
-      alignSelf: dialog.alignment,
-      height: height
-    }
-  }));
-  const classes = useStyles();
 
   const onButtonClick = (e) => {
     dispatch(setDialog(true))
@@ -69,15 +59,17 @@ export default function DialogButton({dialog}) {
 
   return (
     <Button
-        startIcon={startIcon}
-        endIcon={endIcon}
-        disableElevation
-        className={classes.button}
-        disabled={disabled}
-        variant="contained" 
-        color="primary" 
-        onClick={onButtonClick}>
-        {dialog.buttonLabel}
-      </Button>
+      disabled={disabled}
+      icon={startIcon}
+      justified={!dialog.widthAuto}
+      label={dialog.buttonLabel}
+      onClick={onButtonClick}
+      style={{
+        ...getButtonStyle(dialog.alignment, width, height),
+        ...getButtonBrandStyle(blendGlobalTheme),
+      }}
+      trailingIcon={endIcon}
+      variant="primary"
+    />
   );
 }

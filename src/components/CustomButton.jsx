@@ -1,12 +1,13 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { executeAutomation, createBookmark, getAppId, getSheetId } from '../services/backend'
+import { Button } from '@qlik/sprout-react';
+import { executeAutomation, createBookmark, createTemporaryBookmark, getAppId, getSheetId } from '../services/backend'
 import { selectAllItems, setDialog, setSnackbarOpen, setMessage, setSeverity, setRedirect } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 import CustomIcon from './CustomIcon'
+import { getButtonBrandStyle, getButtonStyle } from './component-utils';
+import { getAutomationHypercubeData } from '../utils/hypercube';
 
-export default function CustomButton({ blend, refs, getData, items, dialog, app, id }) {
+export default function CustomButton({ blend, blendGlobalTheme, refs, getData, items, dialog, app, model }) {
   const dispatch = useDispatch();
   let height
   let width
@@ -24,14 +25,6 @@ export default function CustomButton({ blend, refs, getData, items, dialog, app,
       width = `${blend.buttonWidth}%`
     }
   }
-  const useStyles = makeStyles((theme) => ({
-    button: {
-      width: width,
-      alignSelf: blend.alignment,
-      height: height
-    },
-  }));
-  const classes = useStyles();
   const itemsState = useSelector(selectAllItems)
   const [loading, setLoading] = React.useState(false)
 
@@ -110,9 +103,14 @@ export default function CustomButton({ blend, refs, getData, items, dialog, app,
     }
     let bookmarkId
     if (blend.sendSelections) {
-      bookmarkId = await createBookmark(blend.app)
+      bookmarkId = blend.useTemporaryBookmark
+        ? await createTemporaryBookmark(blend.app)
+        : await createBookmark(blend.app)
     }
-    const m  = await executeAutomation(blend.id, { form: clone, data: { hypercube: getData() }, bookmarkid: blend.sendSelections ? bookmarkId : '', app: await getAppId(app), sheetid: await getSheetId(app, id) }, blend.executionToken)
+    const data = blend.simplifiedJsonFormat
+      ? getAutomationHypercubeData(getData(), true)
+      : { hypercube: getAutomationHypercubeData(getData(), false) }
+    const m  = await executeAutomation(blend.id, { form: clone, data, bookmarkid: blend.sendSelections ? bookmarkId : '', app: await getAppId(app), sheetid: await getSheetId(model) }, blend.executionToken)
     dispatch(setSeverity(m.ok || m.msg === 'queued' ? 'success': 'warning'))
     parseMsg(m.msg === 'queued' ? blend.customSuccessMsg : m.msg )
     if(blend.showSuccessMsg) {
@@ -156,18 +154,21 @@ export default function CustomButton({ blend, refs, getData, items, dialog, app,
     }
   }
   return (
-    <LoadingButton
-      className={classes.button}
-      disableElevation
-      startIcon={startIcon}
-      endIcon={endIcon}
+    <Button
       disabled={disabled}
+      icon={startIcon}
+      justified={!blend.buttonWidthAuto}
+      label={blend.buttonLabel}
       loading={loading}
-      loadingIndicator={blend.runningBlendLabel}
-      variant="contained"
-      color="primary"
+      style={{
+        ...getButtonStyle(blend.alignment, width, height),
+        ...getButtonBrandStyle(blendGlobalTheme),
+      }}
+      title={loading ? blend.runningBlendLabel : blend.buttonLabel}
+      trailingIcon={endIcon}
+      variant="primary"
       onClick={onButtonClick}>
       {blend.buttonLabel}
-    </LoadingButton>
+    </Button>
   );
 }

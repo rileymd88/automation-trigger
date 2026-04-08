@@ -1,4 +1,4 @@
-import { useElement, useLayout, useEffect, useApp, useConstraints } from '@nebula.js/stardust';
+import { useElement, useLayout, useEffect, useApp, useConstraints, useModel } from '@nebula.js/stardust';
 import { applyExecutionToken, applyExecutionTokenMigration, getAutomations } from './services/backend';
 import properties from './object-properties';
 import extDefinition from './extDefinition'
@@ -15,12 +15,12 @@ export default function supernova() {
     },
     component() {
       const app = useApp()
+      const model = useModel()
       const el = useElement()
       const layout = useLayout()
       const { active } = useConstraints()
-      const edit = active ? active : false
       const getData = function () {
-        return layout.qHyperCube.qDataPages
+        return layout.qHyperCube
       }
       useEffect(async () => {
         if(!rendered) {
@@ -32,10 +32,10 @@ export default function supernova() {
             const ids = automations.map(a=>a.value)
             if(ids.includes(layout.blend.id)) {
               if(typeof layout.blend.executionToken === 'undefined') {
-                await applyExecutionTokenMigration(app, layout.blend.id, layout.qInfo.qId, layout.blend)
+                await applyExecutionTokenMigration(model, layout.blend.id, layout.blend)
               }
               else {
-                await applyExecutionToken(app, layout.blend.id, layout.qInfo.qId)
+                await applyExecutionToken(model, layout.blend.id, layout.blend.executionToken)
               }
             }
           }
@@ -44,8 +44,7 @@ export default function supernova() {
       
       useEffect(async () => {
         const blendGlobalTheme = layout.blendGlobalTheme
-        const blend = layout.blend
-        blend.app = app
+        const blend = { ...layout.blend, app }
         if (layout.items.length > 0) {
           blend.buttonHeightAuto = true
         }
@@ -53,7 +52,7 @@ export default function supernova() {
         const formItems = layout.items
         const refs = layout.items.map(i => i.ref)
         const dialog = {
-          app: layout.blend.app,
+          app,
           id: layout.blend.id,
           executionToken: layout.blend.executionToken,
           show: layout.blendDialog.show,
@@ -71,7 +70,7 @@ export default function supernova() {
           enabledCondition: layout.blend.enabledCondition,
           useEnabledCondition: layout.blend.useEnabledCondition
         }
-        render(el, formItems, blendGlobalTheme, blend, refs, getData, dialog, app, layout.qInfo.qId);
+        render(el, formItems, blendGlobalTheme, blend, refs, getData, dialog, app, model);
       }, [layout]);
     },
   };

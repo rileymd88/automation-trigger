@@ -82,12 +82,62 @@ export const getAppId = async (app) => {
   })
 }
 
-export const getSheetId = async (app, id) => {
-  return new Promise(async (resolve) => {
-    const obj = await app.getObject(id)
-    const parent = await obj.getParent()
-    resolve(parent.id)
-  })
+function getSheetIdFromUrl() {
+  if (typeof window === 'undefined' || !window.location) {
+    return ''
+  }
+
+  const { href, search, hash } = window.location
+  const sheetQueryId = new URLSearchParams(search).get('sheet')
+
+  if (sheetQueryId) {
+    return sheetQueryId
+  }
+
+  const sources = [href, hash]
+
+  for (const source of sources) {
+    if (!source) {
+      continue
+    }
+
+    const match = source.match(/\/sheet\/([^/?#]+)/)
+
+    if (match && match[1]) {
+      return decodeURIComponent(match[1])
+    }
+  }
+
+  return ''
+}
+
+export const getSheetId = async (model) => {
+  const sheetIdFromUrl = getSheetIdFromUrl()
+
+  if (sheetIdFromUrl) {
+    return sheetIdFromUrl
+  }
+
+  let current = model
+  let lastParent
+
+  try {
+    while (current && typeof current.getParent === 'function') {
+      const parent = await current.getParent()
+
+      if (!parent || !parent.id || parent.id === current.id) {
+        break
+      }
+
+      lastParent = parent
+      current = parent
+    }
+  }
+  catch (err) {
+    return ''
+  }
+
+  return lastParent ? lastParent.id : ''
 }
 
 
@@ -109,42 +159,56 @@ export const executeAutomation = async (automationId, data, executionToken) => {
   })
 }
 
-export const applyExecutionToken = async (app, automationId, thisObjectId) => {
+function hasUpdatedExecutionToken(currentExecutionToken, nextExecutionToken) {
+  if (typeof nextExecutionToken === 'undefined') {
+    return false
+  }
+
+  return currentExecutionToken !== nextExecutionToken
+}
+
+async function patchObject(model, qPatches) {
+  if (!model || typeof model.applyPatches !== 'function') {
+    return
+  }
+
+  await model.applyPatches(qPatches, false)
+}
+
+export const applyExecutionToken = async (model, automationId, currentExecutionToken) => {
   try {
     const automation = await getAutomation(automationId)
     const executionToken = automation.executionToken
-    const thisObject = await app.getObject(thisObjectId)
-    const patchParams = {
-      qSoftPatch: false,
-      qPatches: [{
+
+    if (!hasUpdatedExecutionToken(currentExecutionToken, executionToken)) {
+      return
+    }
+
+    await patchObject(model, [{
         qPath: '/blend/executionToken',
         qOp: 'replace',
         qValue: JSON.stringify(executionToken)
-      }]
-    }
-    await thisObject.applyPatches(patchParams)
+      }])
   }
   catch (e) {
     console.info('This user does not have access to modify to selected automation')
   }
 }
 
-export const applyExecutionTokenMigration = async (app, automationId, thisObjectId, b) => {
+export const applyExecutionTokenMigration = async (model, automationId, blend) => {
   try {
     const automation = await getAutomation(automationId)
     const executionToken = automation.executionToken
-    let blend = {...b}
-    blend.executionToken = executionToken
-    const thisObject = await app.getObject(thisObjectId)
-    const patchParams = {
-      qSoftPatch: false,
-      qPatches: [{
-        qPath: '/blend',
-        qOp: 'replace',
-        qValue: JSON.stringify(blend)
-      }]
+
+    if (!hasUpdatedExecutionToken(blend.executionToken, executionToken)) {
+      return
     }
-    await thisObject.applyPatches(patchParams)
+
+    await patchObject(model, [{
+        qPath: '/blend/executionToken',
+        qOp: 'add',
+        qValue: JSON.stringify(executionToken)
+      }])
   }
   catch (e) {
     console.info('This user does not have access to modify to selected automation')
@@ -174,6 +238,23 @@ export const createBookmark = (app) => {
       const bookmark = await app.createBookmark(props)
       const layout = await bookmark.getLayout()
       resolve(layout.qInfo.qId)
+    }
+    catch (err) {
+      reject(err)
+    }
+  })
+}
+
+export const createTemporaryBookmark = (app) => {
+  return new Promise(async function (resolve, reject) {
+    try {
+      if (!app || typeof app.createTemporaryBookmark !== 'function') {
+        reject(new Error('Temporary bookmarks are not supported by the current app session'))
+        return
+      }
+
+      const bookmark = await app.createTemporaryBookmark({})
+      resolve(bookmark.qId)
     }
     catch (err) {
       reject(err)

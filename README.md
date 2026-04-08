@@ -10,10 +10,16 @@ Automation trigger for Qlik Sense is a extension which allows you to trigger aut
 
 ![a3](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a3.PNG)
 # Installation steps:
-1. Download the latest release from the following link: https://github.com/rileymd88/automation-trigger/releases/download/v1.2.1/automation-trigger.zip
+1. Download the latest release from the following link: https://github.com/rileymd88/automation-trigger/releases/download/v1.3.0/automation-trigger.zip
 2. Import into Qlik Sense using the management console
 
 # Release Notes
+* 1.3.0
+  * Migrated the extension UI from Material UI to Qlik Sprout and upgraded the client runtime to React 18
+  * Added a Simplified JSON format option that sends hypercube data as row records keyed by dimension and measure titles
+  * Added richer automation helper blocks, including optional apply-bookmark wiring and support for temporary bookmarks when sending selections
+  * Improved automation configuration with formula-friendly automation IDs, an updated editor link, and safer execution-token patching
+  * Improved runtime and build compatibility by making sheet ID detection more reliable and updating the Rollup pipeline for Sprout dependencies
 * 1.2.1
   * Bug fix which stopped form data from being sent to the automation
 * 1.2.0
@@ -75,6 +81,7 @@ Automation trigger for Qlik Sense is a extension which allows you to trigger aut
 ### Automation
 * **Select an automation:** Here you can select an automation - At this time it is only possible to select an Automation that you have created
 * **Automation link:** This is a hyperlink which brings you directly to the automation editor for the selected automation
+* **Simplified JSON format:** When enabled, `data` is sent as an array of row records keyed by the dimension and measure titles instead of an object containing raw `qDataPages`
 * **Copy input block:** By clicking on this button, you will copy into your clipboard an input block for your automation which parses the data sent from this extension to the automation. From within your automation simply right click and select Paste Block(s)
 * **Include selections:** If this option is enabled, a bookmark will be created when the automation is run and the bookmark id will be sent to the automation. You can use the bookmark id together with the apply bookmark
 * **Condition to enable automation:** Here you can use a Qlik Sense formula to determine when it should be possible to run the automation. If the formula returns 1, the automation can be run. If the formula returns 0, the automation cannot be run
@@ -194,6 +201,22 @@ timeout|The amount of time in ms before redirecting the user |integer
   "sheetid": "ec5e7e0b-6a65-4f73-8271-fb1c5c5e28c0"
 }
 ```
+
+When **Simplified JSON format** is enabled, the same hypercube cells are sent as row records instead:
+
+```json
+{
+  "data": [
+    {
+      "User": "UserDirectory=; UserId=auth0|a08D000001KnbpKIAR",
+      "Time": "16.11.2021 11:33:02"
+    }
+  ]
+}
+```
+
+Dimension fields prefer the displayed text value. Measure fields prefer `qNum` when it is a valid number and otherwise fall back to the displayed text.
+
 10. If we want to ensure we receive a message when the automation has run, we can add an Output block to our automation. If you also want to redirect users after the automation has run, please refer to the documentation above in the Appearance area
 
 ![a12](https://raw.githubusercontent.com/rileymd88/data/master/automation-trigger/a12.PNG)
@@ -211,9 +234,7 @@ timeout|The amount of time in ms before redirecting the user |integer
 
 # Developing the extension
 1. Clone the repository
-2. In the package.json file replace `nebula sense --ext src/extDefinition.js --meta ./meta.json && cd ../ && python build.py extension` with `nebula sense --ext src/extDefinition.js --meta ./meta.json` 
 2. Run `npm i`
-3. Run `npm run build`
-4. Run `npm run sense`
-5. Then zip the contents in the folder automation-trigger-ext and then upload as an extension
-
+3. Run `npm run sense`
+4. The `sense` script builds the bundle, generates the `automation-trigger-ext` folder, and deploys it through `../extension_build/build.py`
+5. If you only want the packaged extension contents, zip the files in `automation-trigger-ext` and upload that archive as an extension

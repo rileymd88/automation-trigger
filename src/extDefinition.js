@@ -237,7 +237,7 @@ var explainRef = {
 var automationLink = {
   label: "Automation link",
   component: "link",
-  url: function (layout) { return `${getBaseUrl()}/automations/${layout.blend.id}/editor`},
+  url: function (layout) { return `${getBaseUrl()}/analytics/automations/editor/${layout.blend.id}/edit`},
   show: function (layout) { return layout.blend.id.length > 1 }
 }
 
@@ -362,13 +362,18 @@ var config = {
 var blends = {
   label: 'Select an automation',
   component: 'expression-with-dropdown',
-  dropdownOnly: true,
-  type: 'string',
+  dropdownOnly: false,
+  expressionType: 'StringExpression',
   ref: 'blend.id',
   defaultValue: '',
   options: function () {
     return getAutomations()
   }
+}
+
+var automationHelpText = {
+  component: 'text',
+  label: 'When using a formula to define the automation, you need to ensure you provide a valid automation ID.'
 }
 
 /* var blendUrl = {
@@ -486,17 +491,220 @@ var condition = {
 
 var sendSelections = {
   type: 'boolean',
+  component: 'switch',
   ref: 'blend.sendSelections',
   translation: 'Object.ActionButton.Automation.SendSelections',
   defaultValue: false,
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+}
+
+var useTemporaryBookmark = {
+  type: 'boolean',
+  component: 'switch',
+  ref: 'blend.useTemporaryBookmark',
+  label: 'Use temporary bookmark',
+  defaultValue: false,
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
+  show: function (data) {
+    return data.blend.sendSelections
+  }
+}
+
+function createInputBlock(childId) {
+  return {
+    id: "95447E1E-EB22-4094-8FE7-7702E862A7B1",
+    type: "FormBlock",
+    x: 92,
+    y: 195,
+    disabled: false,
+    name: "inputs",
+    displayName: "Inputs",
+    comment: "Receive data from automation trigger",
+    childId: childId || null,
+    inputs: [],
+    settings: [
+      {
+        id: "persist_data",
+        value: "no",
+        type: "select",
+        displayValue: "No",
+        structure: []
+      }
+    ],
+    collapsed: [{ name: "loop", isCollapsed: false }],
+    form: [
+      {
+        id: "inputs-input-0",
+        label: "form",
+        helpText: null,
+        type: "data",
+        values: null,
+        isRequired: true,
+        options: {},
+        order: 0
+      },
+      {
+        id: "inputs-input-1",
+        label: "data",
+        helpText: null,
+        type: "data",
+        values: null,
+        isRequired: true,
+        options: {},
+        order: 1
+      },
+      {
+        id: "inputs-input-2",
+        label: "sheetid",
+        helpText: "Sheet ID",
+        type: "input",
+        values: null,
+        isRequired: true,
+        options: {},
+        order: 2
+      },
+      {
+        id: "inputs-input-3",
+        label: "app",
+        helpText: "App ID",
+        type: "input",
+        values: null,
+        isRequired: true,
+        options: {},
+        order: 3
+      },
+      {
+        id: "inputs-input-4",
+        label: "bookmarkid",
+        helpText: "Bookmark ID",
+        type: "input",
+        values: null,
+        isRequired: false,
+        options: {},
+        order: 4
+      }
+    ],
+    persistData: "no"
+  }
+}
+
+function createApplyBookmarkBlock(useTemporaryBookmarkValue) {
+  const temporaryBookmarkValue = useTemporaryBookmarkValue ? 'Yes' : 'No'
+
+  return {
+    id: "B315AF23-ABF9-45BD-8550-AEDA54105D18",
+    type: "SnippetBlock",
+    disabled: false,
+    name: "applyBookmark",
+    displayName: "Qlik Cloud Services - Apply Bookmark",
+    comment: "",
+    childId: null,
+    inputs: [
+      {
+        id: "d41ae430-073a-11ec-bdef-bb104839c843",
+        value: "{ $.inputs.app }",
+        type: "string",
+        structure: {}
+      },
+      {
+        id: "d41b7e40-073a-11ec-ac1b-59270c518ae7",
+        value: "{ $.inputs.bookmarkid }",
+        type: "string",
+        structure: {}
+      },
+      {
+        id: "f478e320-9270-11ed-b551-d73ebe8e14ad",
+        value: temporaryBookmarkValue,
+        type: "select",
+        displayValue: temporaryBookmarkValue,
+        structure: {}
+      }
+    ],
+    settings: [
+      {
+        id: "blendr_on_error",
+        value: "stop",
+        type: "select",
+        structure: {}
+      },
+      {
+        id: "automations_censor_data",
+        value: false,
+        type: "checkbox",
+        structure: {}
+      }
+    ],
+    collapsed: [{ name: "loop", isCollapsed: false }],
+    x: 19,
+    y: 233,
+    datasourcetype_guid: "61a87510-c7a3-11ea-95da-0fb0c241e75c",
+    snippet_guid: "d41632d0-073a-11ec-a6ac-d34723268fbc"
+  }
+}
+
+function createAutomationBlocks(data) {
+  const includeSelections = data && data.blend && data.blend.sendSelections
+  const useTemporaryBookmarkValue = data && data.blend && data.blend.useTemporaryBookmark
+
+  if (!includeSelections) {
+    return {
+      blocks: [createInputBlock()],
+      variables: []
+    }
+  }
+
+  const applyBookmarkBlock = createApplyBookmarkBlock(useTemporaryBookmarkValue)
+
+  return {
+    blocks: [
+      createInputBlock(applyBookmarkBlock.id),
+      applyBookmarkBlock
+    ],
+    variables: []
+  }
+}
+
+var simplifiedJsonFormat = {
+  type: 'boolean',
+  ref: 'blend.simplifiedJsonFormat',
+  label: 'Simplified JSON format',
+  component: 'switch',
+  defaultValue: false,
+  options: [
+    {
+      value: true,
+      translation: 'properties.on',
+    },
+    {
+      value: false,
+      translation: 'properties.off',
+    },
+  ],
 }
 
 var copyButton = {
   component: 'button',
   label: 'Copy input block',
-  action: function() {
-    const jsonInputBlock = {"blocks":[{"id":"95447E1E-EB22-4094-8FE7-7702E862A7B1","type":"FormBlock","x":92,"y":195,"disabled":false,"name":"inputs","displayName":"Inputs","comment":"Receive data from automation trigger","childId":null,"inputs":[],"settings":[{"id":"persist_data","value":"no","type":"select","displayValue":"No","structure":[]}],"collapsed":[{"name":"loop","isCollapsed":false}],"form":[{"id":"inputs-input-0","label":"form","helpText":null,"type":"data","values":null,"isRequired":true,"options":{},"order":0},{"id":"inputs-input-1","label":"data","helpText":null,"type":"data","values":null,"isRequired":true,"options":{},"order":1},{"id":"inputs-input-2","label":"sheetid","helpText":"Sheet ID","type":"input","values":null,"isRequired":true,"options":{},"order":2},{"id":"inputs-input-3","label":"app","helpText":"App ID","type":"input","values":null,"isRequired":true,"options":{},"order":3},{"id":"inputs-input-4","label":"bookmarkid","helpText":"Bookmark ID","type":"input","values":null,"isRequired":false,"options":{},"order":4}],"persistData":"no"}],"variables":[]}
-    copy(JSON.stringify(jsonInputBlock))
+  action: function(data) {
+    copy(JSON.stringify(createAutomationBlocks(data)))
   }
 }
 
@@ -506,10 +714,13 @@ var blend = {
   component: "items",
   items: {
     blends: blends,
+    automationHelpText: automationHelpText,
     blendExecutionToken: blendExecutionToken,
     automationLink: automationLink,
     copyButton: copyButton,
     sendSelections: sendSelections,
+    useTemporaryBookmark: useTemporaryBookmark,
+    simplifiedJsonFormat: simplifiedJsonFormat,
     useCondition: useCondition,
     condition: condition
   }
