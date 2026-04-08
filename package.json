@@ -19,14 +19,14 @@
   "main": "dist/automation-trigger.js",
   "module": "dist/automation-trigger.esm.js",
   "scripts": {
-    "build": "rollup -c rollup.config.js -w",
+    "build": "rollup -c rollup.config.js",
+    "build:watch": "rollup -c rollup.config.js -w",
     "lint": "eslint src",
     "start": "nebula serve --no-build",
-    "sense": "nebula sense --ext src/extDefinition.js --meta ./meta.json --sourcemap true && cd ../ && python build.py extension",
-    "test:integration": "aw puppet --testExt '*.int.js' --glob 'test/integration/**/*.int.js'"
+    "sense": "npm run build && nebula sense --ext src/extDefinition.js --meta ./meta.json --sourcemap true && python3 ../extension_build/build.py --type extension --extension-path . --tenant coe-emea.eu.qlikcloud.com"
   },
   "devDependencies": {
-    "@after-work.js/aw": "6.0.10",
+    "@babel/core": "7.4.5",
     "@babel/cli": "7.4.4",
     "@babel/plugin-transform-react-jsx": "7.3.0",
     "@babel/preset-env": "7.4.5",
@@ -62,6 +62,7 @@
     "@mui/lab": "^5.0.0-alpha.54",
     "@mui/material": "^5.1.0",
     "@mui/styles": "^5.1.0",
+    "@mui/x-date-pickers": "^5.0.20",
     "@reduxjs/toolkit": "^1.5.0",
     "clipboard-copy": "^4.0.1",
     "date-fns": "^2.25.0",

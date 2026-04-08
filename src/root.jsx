@@ -10,8 +10,8 @@ import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
 import { configureStore } from '@reduxjs/toolkit';
 import formsReducer from './states/formsSlice';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 export function render(element, items, blendGlobalTheme, blend, refs, getData, dialog, app, id) {
   const theme = createTheme(adaptV4Theme({

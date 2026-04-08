@@ -3,10 +3,8 @@ import makeStyles from '@mui/styles/makeStyles';
 import TextField from '@mui/material/TextField';
 import { setItem, selectItem } from '../states/formsSlice'
 import { useSelector, useDispatch } from 'react-redux';
-import { DatePicker } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { format } from 'date-fns'
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 const convertNumberDate = (numberData) => {
   const hours = Math.floor((numberData % 1) * 24);
@@ -49,16 +47,14 @@ export default function CustomDatePicker({ block, blendGlobalTheme, blend }) {
   };
 
   return (
-    <LocalizationProvider className={classes.datePicker} dateAdapter={AdapterDateFns}>
-      <DatePicker
-        onChange={onDateChange}
-        mask={block.dateFormat.split('|')[1]}
-        inputFormat={block.dateFormat.split('|')[0]}
-        className={classes.datePicker}
-        value={date}
-        label={block.label}
-        renderInput={(params) => <TextField {...params} className={classes.datePicker} variant={blendGlobalTheme.variant} />}
-      />
-    </LocalizationProvider>
+    <DatePicker
+      onChange={onDateChange}
+      mask={block.dateFormat.split('|')[1]}
+      inputFormat={block.dateFormat.split('|')[0]}
+      className={classes.datePicker}
+      value={date}
+      label={block.label}
+      renderInput={(params) => <TextField {...params} className={classes.datePicker} variant={blendGlobalTheme.variant} />}
+    />
   );
 }
